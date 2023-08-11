@@ -48,57 +48,66 @@ const connect = (
 
       client.on('message', async function (msg) {
         console.log('mqtt.event.message', msg);
+        let res;
         try {
-          var res = JSON.parse(msg.data);
-          switch (res.cmd) {
-            case 'restart_app':
-              console.log('restart', typeof res);
-              let payload = decodedToken;
-              let objData = JSON.stringify(res.data);
-              payload.payload = {cronID: objData.cronID};
-              publicCron(ClientData, payload, result => {
-                if (result) {
-                  Restart.restart();
-                }
-              });
-              break;
-            case 'qr_payment_result':
-              console.log('SAVE QR RESULT');
-              QRPaymentResult(res.result);
-              break;
-            case 'setup_inventory':
-              inventory(res.inventory);
-              inventoryAll(res.inventory);
-              var arrayCategory = [
-                {
-                  _id: 'all',
-                  categoryName: 'ALL',
-                },
-              ];
-              arrayCategory = arrayCategory.concat(res.category);
-              category(arrayCategory);
-              //client.disconnect();
-              console.log('SYNC!!!!');
-              break;
-            case 'open_cash_payment':
-              console.log('OPEN CASH');
-              cash_method(true);
-              break;
-            case 'close_cash_payment':
-              console.log('CLOSE CASH');
-              cash_method(false);
-              break;
-            case 'clear_jammed':
-              const callback = await maincontroll.clearselectionjammed('clear');
-              console.log('clear jammed', callback);
-              break;
-            default:
-              break;
-          }
-          cb(res);
+          res = JSON.parse(msg.data);
         } catch (error) {
           console.log(error);
         }
+        if (res) {
+          cb(res);
+        }
+        // try {
+        //   var res = JSON.parse(msg.data);
+        //   switch (res.cmd) {
+        //     case 'restart_app':
+        //       console.log('restart', typeof res);
+        //       let payload = decodedToken;
+        //       let objData = JSON.stringify(res.data);
+        //       payload.payload = {cronID: objData.cronID};
+        //       publicCron(ClientData, payload, result => {
+        //         if (result) {
+        //           Restart.restart();
+        //         }
+        //       });
+        //       break;
+        //     case 'qr_payment_result':
+        //       console.log('SAVE QR RESULT');
+        //       QRPaymentResult(res.result);
+        //       break;
+        //     case 'setup_inventory':
+        //       inventory(res.inventory);
+        //       inventoryAll(res.inventory);
+        //       var arrayCategory = [
+        //         {
+        //           _id: 'all',
+        //           categoryName: 'ALL',
+        //         },
+        //       ];
+        //       arrayCategory = arrayCategory.concat(res.category);
+        //       category(arrayCategory);
+        //       //client.disconnect();
+        //       console.log('SYNC!!!!');
+        //       break;
+        //     case 'open_cash_payment':
+        //       console.log('OPEN CASH');
+        //       cash_method(true);
+        //       break;
+        //     case 'close_cash_payment':
+        //       console.log('CLOSE CASH');
+        //       cash_method(false);
+        //       break;
+        //     case 'clear_jammed':
+        //       const callback = await maincontroll.clearselectionjammed('clear');
+        //       console.log('clear jammed', callback);
+        //       break;
+        //     default:
+        //       break;
+        //   }
+        //   cb(res);
+        // } catch (error) {
+        //   console.log(error);
+        // }
       });
 
       client.on('connect', async function () {

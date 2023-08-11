@@ -183,6 +183,17 @@ export default function StartScreen() {
       async callback => {
         console.log('MQTT callback::', callback);
         switch (callback.cmd) {
+          case 'restart_app':
+            console.log('restart', typeof callback);
+            let payload = isDecodedToken;
+            let objData = JSON.stringify(callback.data);
+            payload.payload = {cronID: objData.cronID};
+            // publicCron(ClientData, payload, result => {
+            //   if (result) {
+            //     Restart.restart();
+            //   }
+            // });
+            break;
           case 'setup_inventory':
             inventory(callback.inventory);
             inventoryAll(callback.inventory);
@@ -214,6 +225,16 @@ export default function StartScreen() {
           case 'open_cash_payment':
             console.log('APP OPEN CASH');
             cash_method(true);
+            break;
+          case 'qr_payment_result':
+            console.log('SAVE QR RESULT');
+            QRPaymentResult(callback.result);
+            break;
+          case 'clear_jammed':
+            const callbackJam = await maincontroll.clearselectionjammed(
+              'clear',
+            );
+            console.log('clear jammed', callbackJam);
             break;
           case 'close_cash_payment':
             console.log('APP CLOSE CASH');
