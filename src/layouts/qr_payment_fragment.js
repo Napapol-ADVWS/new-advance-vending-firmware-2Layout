@@ -28,6 +28,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
   const [PaymentSuccess, setPaymentSuccess] = React.useState(false);
   const [statusCode, setStatusCode] = React.useState('');
   const [msgMdb, setMsgMdb] = React.useState('');
+  const [turnOff, setTurnOff] = React.useState(false);
 
   const [QRPaymentResult] = useRecoilState(GOLBAL.QRPaymentResult);
   const [paymentReady] = useRecoilState(GOLBAL.paymentReady);
@@ -48,11 +49,16 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
       clearInterval(interval);
     }
     return () => {
+      console.log('Clear !!!!');
       clearInterval(interval);
+      if (turnOff) {
+        maincontroll.off('dispense');
+      }
     };
   }, [timer, disableCancel]);
 
   const startMDB = () => {
+    console.log('startMDB');
     if (!startSuccess) {
       console.log(startSuccess);
       dispenseStatus();
@@ -168,7 +174,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
 
   const dispenseStatus = () => {
     maincontroll.on('dispense', async res => {
-      console.log(':', res);
+      console.log('dispense status:', res);
       switch (res.code) {
         case '50401':
           setVendingStatus(res.message);
@@ -176,6 +182,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
         case '50402':
           setVendingStatus(res.message);
           await maincontroll.off('dispense');
+          setTurnOff(true);
           onPaymentSuccess();
           break;
         case '50203':

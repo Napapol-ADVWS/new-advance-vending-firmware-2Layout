@@ -706,6 +706,8 @@ maincontroll.on = function (e, cb) {
 /// delete from VMC to Android
 maincontroll.off = function (e) {
   mainevent[e] = false;
+  console.log('delete from VMC to Android:', mainevent[e]);
+  console.log('dispense status:', mainevent.dispense);
 };
 
 /// Send command from android to VMC ///

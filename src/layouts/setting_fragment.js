@@ -23,6 +23,7 @@ import LiftTest from '../components/setting/liftTest';
 import Script from '../script';
 import Restart from 'react-native-restart';
 import MQTTConnection from '../MQTTConnection';
+import RNFS from 'react-native-fs';
 
 const maincontroll = require('../../maincontroll');
 
@@ -113,16 +114,20 @@ const Setting = () => {
 
   const dismissModal = () => setModalTest(false);
 
-  const readLog = () => {
-    Script.readLogFile()
-      .then(fileContent => {
-        if (fileContent !== null) {
-          console.log('File Content:', fileContent);
-          // ทำสิ่งที่คุณต้องการกับ fileContent ที่อ่านมาได้ในนี้
-        }
+  const rebootApp = async () => {
+    // try {
+    //   await RebootModule.rebootDevice();
+    //   console.log('Device is rebooting...');
+    // } catch (error) {
+    //   console.error('An error occurred while rebooting:', error);
+    // }
+    RNFS.readFileAssets('reboot_android.sh', 'utf8')
+      .then(scriptContent => {
+        // สามารถดำเนินการกับเนื้อหาของ script ได้ที่นี่
+        // เช่นเรียกใช้โดยใช้ RNFS.writeFile() แล้วเรียกใช้โดยใช้ RNFS.stat()
       })
       .catch(error => {
-        console.error('Error:', error);
+        console.log('Error reading script file:', error);
       });
   };
 
@@ -217,26 +222,20 @@ const Setting = () => {
                   Device Setting
                 </RN.Text>
               </RN.TouchableOpacity>
-              <RN.TouchableOpacity
-                style={[Styles.btn_settingDevice_content, {marginTop: 20}]}
-                onPress={() => readLog()}>
-                <RN.Text style={Styles.btn_settingDevice_text}>
-                  Read Log
-                </RN.Text>
-              </RN.TouchableOpacity>
             </RN.View>
             <RN.View style={Styles.btn_exit_container}>
               <RN.TouchableOpacity
                 style={Styles.btn_exit_content}
                 onPress={() => {
-                  if (ClientData && Object.keys(ClientData).length > 0) {
-                    MQTTConnection.disconnectMQTT(ClientData);
-                  }
+                  // if (ClientData && Object.keys(ClientData).length > 0) {
+                  //   MQTTConnection.disconnectMQTT(ClientData);
+                  // }
                   navigation.reset({
                     index: 0,
                     routes: [{name: 'Start'}],
                   });
                   //Restart.restart();
+                  //rebootApp();
                 }}>
                 <RN.Text style={Styles.btn_exit_text}>Exit</RN.Text>
               </RN.TouchableOpacity>

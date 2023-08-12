@@ -1,5 +1,8 @@
 package com.new_advance_vending;
 
+import android.content.IntentFilter;
+import android.content.Intent;
+import com.new_advance_vending.BootReceiver;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
@@ -28,7 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
-          return packages;
+        return packages;
         }
 
         @Override
@@ -56,6 +59,9 @@ public class MainApplication extends Application implements ReactApplication {
     ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    IntentFilter bootFilter = new IntentFilter(Intent.ACTION_BOOT_COMPLETED);
+    BootReceiver bootReceiver = new BootReceiver();
+    registerReceiver(bootReceiver, bootFilter);
   }
 
   /**
