@@ -181,3 +181,8 @@ export const temperature = atom({
   key: 'temperature',
   default: '0',
 });
+
+export const vendingReady = atom({
+  key: 'vendingReady',
+  default: false,
+});

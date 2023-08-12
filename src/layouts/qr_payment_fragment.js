@@ -67,13 +67,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
 
   const checkInputQRPayment = async () => {
     if (QRPaymentResult.status === 'success' && paymentReady) {
-      Script.writeLogToFile(
-        'QRPaymentResult / ' +
-          JSON.stringify(QRPaymentResult) +
-          `/file: qr_payment_fragment Time: ${moment().format(
-            'DD/MM/YYYY HH:mm:ss',
-          )}`,
-      );
       if (!PaymentSuccess) {
         console.log('PaymentSuccess::', QRPaymentResult);
         setPaymentSuccess(true);
@@ -82,13 +75,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           Number(product.slot.col),
         );
         console.log('callbackDispense::', callbackDispense);
-        Script.writeLogToFile(
-          'dispense / ' +
-            JSON.stringify(callbackDispense) +
-            `/file: qr_payment_fragment Time: ${moment().format(
-              'DD/MM/YYYY HH:mm:ss',
-            )}`,
-        );
         if (callbackDispense && !callbackDispense.result) {
           if (!callbackDispense.result && callbackDispense.code === '104001') {
             setVendingStatus(callbackDispense.message);

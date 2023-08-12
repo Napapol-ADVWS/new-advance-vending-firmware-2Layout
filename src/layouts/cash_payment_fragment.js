@@ -42,8 +42,9 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
     if (disableCancel) {
       clearInterval(interval);
     }
-    return () => {
+    return async () => {
       clearInterval(interval);
+      //await maincontroll.off('dispense');
     };
   }, [timer, disableCancel]);
 
@@ -152,6 +153,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
       setInputValue(inputMoney);
       console.log('displayMoney', inputMoney);
       if (Number(inputMoney) >= Number(prodPrice)) {
+        dispenseStatus();
         setDisableCancel(true);
         const callbackCoin2 = await maincontroll.setcoinaccept(false);
         await maincontroll.delay2();

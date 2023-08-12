@@ -24,24 +24,29 @@ const InputServiceMode = ({login}) => {
 
   const onEnter = () => {
     setTextError(false);
-    STORE.getItem('TOKEN', response => {
-      if (response.result) {
-        POST.postJson('loginServiceMode', {pin: String(numInput)}, res => {
-          console.log(res);
-          if (res.result) {
-            login();
-          } else {
-            setTextError(true);
-          }
-        });
-      } else {
-        if (String(numInput) === '000000') {
-          login();
-        } else {
-          setTextError(true);
-        }
-      }
-    });
+    if (String(numInput) === '000000') {
+      login();
+    } else {
+      setTextError(true);
+    }
+    // STORE.getItem('TOKEN', response => {
+    //   if (response.result) {
+    //     POST.postJson('loginServiceMode', {pin: String(numInput)}, res => {
+    //       console.log(res);
+    //       if (res.result) {
+    //         login();
+    //       } else {
+    //         setTextError(true);
+    //       }
+    //     });
+    //   } else {
+    //     if (String(numInput) === '000000') {
+    //       login();
+    //     } else {
+    //       setTextError(true);
+    //     }
+    //   }
+    // });
   };
 
   return (

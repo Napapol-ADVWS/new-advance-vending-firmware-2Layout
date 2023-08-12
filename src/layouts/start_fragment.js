@@ -19,6 +19,7 @@ import Restart from 'react-native-restart';
 
 const maincontroll = require('../../maincontroll');
 let optionsMqtt = {};
+let onlyfirsttime = false;
 export default function StartScreen() {
   const [isReady, setIsReady] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(0);
@@ -26,6 +27,7 @@ export default function StartScreen() {
   const [isPaymentMethod] = useRecoilState(GLOBAL.payment_method);
   const [isDecodedToken] = useRecoilState(GLOBAL.decodeToken);
   const [ClientData] = useRecoilState(GLOBAL.mqttClient);
+  const [vendingReady] = useRecoilState(GLOBAL.vendingReady);
   const onSetKioskID = useSetRecoilState(GLOBAL.KIOSKID);
   const onSetRegisterKey = useSetRecoilState(GLOBAL.REGISTERKEY);
   const onSetToken = useSetRecoilState(GLOBAL.TOKEN);
@@ -164,6 +166,8 @@ export default function StartScreen() {
   const connectMQTT = token => {
     setIsLoading(70);
     console.log(optionsMqtt);
+    console.log('checkConnectMQTT');
+    checkConnectMQTT();
     MQTTConnection.connect(
       optionsMqtt.token,
       String(optionsMqtt.kiosk),
@@ -208,9 +212,9 @@ export default function StartScreen() {
             }
             category(arrayCategory);
             setIsReady(true);
-            Script.checkInV2();
+            //Script.checkInV2();
+            onlyfirsttime = true;
             setIsLoading(100);
-            navigate.navigate('Splash');
             break;
           case 'setup_ads':
             if (callback.config.ads) {
@@ -243,6 +247,16 @@ export default function StartScreen() {
         }
       },
     );
+  };
+
+  const checkConnectMQTT = () => {
+    if (onlyfirsttime) {
+      navigate.navigate('Splash');
+    } else {
+      setTimeout(() => {
+        checkConnectMQTT();
+      }, 3000);
+    }
   };
 
   return (
