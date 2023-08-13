@@ -11,8 +11,8 @@ export default function App() {
   async function connectMDB() {
     await maincontroll.open();
     // setTimeout(async () => {
-    const callbackCoin = await maincontroll.setcoinaccept(true);
-    const callbackBill = await maincontroll.setbillaccept(true);
+    const callbackCoin = await maincontroll.setcoinaccept(false);
+    const callbackBill = await maincontroll.setbillaccept(false);
     console.log(callbackCoin);
     console.log(callbackBill);
     // }, 1000);

@@ -50,7 +50,6 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
 
   const startMDB = () => {
     if (!startSuccess) {
-      dispenseStatus();
       setVendingStatus('Ready');
       receiveMoney();
       setStartSucess(true);
@@ -66,7 +65,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           break;
         case '50402':
           setVendingStatus(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           checkChangeMoney();
           break;
         case '50203':
@@ -76,7 +75,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         case '50204':
@@ -86,7 +85,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         case '50410':
@@ -110,7 +109,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         case '50205':
@@ -120,7 +119,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         case '50207':
@@ -130,7 +129,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('cancel', '', '');
           break;
         default:
@@ -153,15 +152,14 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
       setInputValue(inputMoney);
       console.log('displayMoney', inputMoney);
       if (Number(inputMoney) >= Number(prodPrice)) {
-        dispenseStatus();
+        MdbTurnOff();
         setDisableCancel(true);
         const callbackCoin2 = await maincontroll.setcoinaccept(false);
-        await maincontroll.delay2();
         const callbackBill2 = await maincontroll.setbillaccept(false);
-        await maincontroll.delay2();
         console.log('callbackCoin:', callbackCoin2);
         console.log('callbackBill:', callbackBill2);
-        await maincontroll.clearwait();
+        maincontroll.clearwait();
+        dispenseStatus();
         await dispenseProduct();
       }
     });
@@ -222,7 +220,6 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
       const changeCallback = await maincontroll.givechange(Number(CheckChange));
       const coinStack = await Script.checkCoinStack();
       console.log('givechange res =>', changeCallback);
-      MdbTurnOff();
       let postdata = {
         action: 'complete',
         payment: {
@@ -234,14 +231,11 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
         transactionID: transactionID,
         kioskStatus: {msg: 'success', code: '2000'},
       };
-      setTimeout(() => {
-        inputMoney = 0;
-        console.log('data update transaction', postdata);
-        updateTransaction(postdata, 'complete');
-      }, 3000);
+      inputMoney = 0;
+      console.log('data update transaction', postdata);
+      updateTransaction(postdata, 'complete');
     } else {
       const coinStack = await Script.checkCoinStack();
-      MdbTurnOff();
       let postdata = {
         action: 'complete',
         payment: {
@@ -253,17 +247,14 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
         transactionID: transactionID,
         kioskStatus: {msg: 'success', code: '2000'},
       };
-      setTimeout(() => {
-        inputMoney = 0;
-        console.log('data update transaction', postdata);
-        updateTransaction(postdata, 'complete');
-      }, 3000);
+      inputMoney = 0;
+      console.log('data update transaction', postdata);
+      updateTransaction(postdata, 'complete');
     }
   };
 
   const dispenseProduct = async () => {
     console.log('dispense start', product.slot.col);
-    MdbTurnOff();
     const callbackDispense = await maincontroll.dispense(
       Number(product.slot.col),
     );
@@ -397,19 +388,15 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
       const coinStack = await Script.checkCoinStack();
       postdata.payment.coinStack = coinStack;
       console.log('refundMoney=>', givechange);
-      setTimeout(() => {
-        inputMoney = 0;
-        console.log('data update transaction', postdata);
-        updateTransaction(postdata, 'cancel', action);
-      }, 3000);
+      inputMoney = 0;
+      console.log('data update transaction', postdata);
+      updateTransaction(postdata, 'cancel', action);
     } else {
       const coinStack = await Script.checkCoinStack();
-      setTimeout(() => {
-        inputMoney = 0;
-        postdata.payment.coinStack = coinStack;
-        console.log('data update transaction', postdata);
-        updateTransaction(postdata, 'cancel', action);
-      }, 3000);
+      inputMoney = 0;
+      postdata.payment.coinStack = coinStack;
+      console.log('data update transaction', postdata);
+      updateTransaction(postdata, 'cancel', action);
     }
   };
 
@@ -418,9 +405,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
     setShowCancel(true);
     MdbTurnOff();
     const callbackCoin = await maincontroll.setcoinaccept(false);
-    await maincontroll.delay2();
     const callbackBill = await maincontroll.setbillaccept(false);
-    await maincontroll.delay2();
     console.log('callbackCoin:', callbackCoin);
     console.log('callbackBill:', callbackBill);
     await refundMoney('cancel');

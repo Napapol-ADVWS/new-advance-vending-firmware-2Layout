@@ -53,7 +53,6 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
   const startMDB = () => {
     if (!startSuccess) {
       console.log(startSuccess);
-      dispenseStatus();
       let tempBase64 = QrPayment;
       let imageQr = tempBase64 + transaction.qr.imageWithBase64;
       setQrPayment(imageQr);
@@ -65,6 +64,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
 
   const checkInputQRPayment = async () => {
     if (QRPaymentResult.status === 'success' && paymentReady) {
+      dispenseStatus();
       if (!PaymentSuccess) {
         console.log('PaymentSuccess::', QRPaymentResult);
         setPaymentSuccess(true);
@@ -164,7 +164,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
           break;
         case '50402':
           setVendingStatus(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           onPaymentSuccess();
           break;
         case '50203':
@@ -174,7 +174,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         case '50204':
@@ -184,7 +184,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(res.code);
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         case '50410':
@@ -209,7 +209,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(res.code);
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         case '50205':
@@ -227,7 +227,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
           setStatusCode(res.code);
           setMsgMdb(res.message);
           setMsgError(ERR.msgError(res.code));
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         default:
@@ -242,16 +242,14 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
       action: 'complete',
       payment: {
         coinStack: {C1: 0, C2: 0, C5: 0, C10: 0},
-        type: 'Cash',
+        type: 'Card',
         amount: moneyInput,
         changeMoney: 0,
       },
       transactionID: transaction.transactionID,
       kioskStatus: {msg: 'success', code: '2000'},
     };
-    setTimeout(() => {
-      updateTransaction(postdata, 'complete');
-    }, 3000);
+    updateTransaction(postdata, 'complete');
   };
 
   const MdbTurnOff = () => {
@@ -279,9 +277,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
     setMoneyRefund(refund);
     const givechange = await maincontroll.givechange(Number(refund));
     console.log('refundMoney=>', givechange);
-    setTimeout(() => {
-      updateTransaction(postdata, 'cancel', action);
-    }, 3000);
+    updateTransaction(postdata, 'cancel', action);
   };
 
   const errorTransaction = () => {
@@ -297,9 +293,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
       transactionID: transaction.transactionID,
       kioskStatus: {msg: msgMdb, code: statusCode},
     };
-    setTimeout(() => {
-      updateTransaction(postdata, 'cancel', 'error');
-    }, 3000);
+    updateTransaction(postdata, 'cancel', 'error');
   };
 
   const closePayment = async () => {
@@ -315,9 +309,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
       },
       transactionID: transaction.transactionID,
     };
-    setTimeout(() => {
-      updateTransaction(postdata, 'cancel', 'cancel');
-    }, 3000);
+    updateTransaction(postdata, 'cancel', 'cancel');
   };
 
   return (

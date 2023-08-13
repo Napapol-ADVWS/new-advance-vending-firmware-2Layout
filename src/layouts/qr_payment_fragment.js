@@ -51,9 +51,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
     return () => {
       console.log('Clear !!!!');
       clearInterval(interval);
-      if (turnOff) {
-        maincontroll.off('dispense');
-      }
     };
   }, [timer, disableCancel]);
 
@@ -61,7 +58,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
     console.log('startMDB');
     if (!startSuccess) {
       console.log(startSuccess);
-      dispenseStatus();
       let tempBase64 = QrPayment;
       let imageQr = tempBase64 + transaction.qr.imageWithBase64;
       setQrPayment(imageQr);
@@ -73,6 +69,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
 
   const checkInputQRPayment = async () => {
     if (QRPaymentResult.status === 'success' && paymentReady) {
+      dispenseStatus();
       if (!PaymentSuccess) {
         console.log('PaymentSuccess::', QRPaymentResult);
         setPaymentSuccess(true);
@@ -181,7 +178,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           break;
         case '50402':
           setVendingStatus(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           setTurnOff(true);
           onPaymentSuccess();
           break;
@@ -192,7 +189,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         case '50204':
@@ -202,7 +199,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(res.code);
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         case '50410':
@@ -227,7 +224,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(res.code);
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         case '50205':
@@ -245,7 +242,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setMsgError(ERR.msgError(res.code));
           setStatusCode(res.code);
           setMsgMdb(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
         default:
@@ -255,7 +252,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
   };
 
   const onPaymentSuccess = async () => {
-    await MdbTurnOff();
+    MdbTurnOff();
     let postdata = {
       action: 'complete',
       payment: {
@@ -267,9 +264,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
       transactionID: transaction.transactionID,
       kioskStatus: {msg: 'success', code: '2000'},
     };
-    setTimeout(() => {
-      updateTransaction(postdata, 'complete');
-    }, 3000);
+    updateTransaction(postdata, 'complete');
   };
 
   const MdbTurnOff = async () => {
@@ -279,7 +274,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
 
   const refundMoney = async action => {
     console.log('start refund');
-    await MdbTurnOff();
+    MdbTurnOff();
     let postdata = {
       action: action,
       payment: {
@@ -298,13 +293,11 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
     setMoneyRefund(refund);
     const givechange = await maincontroll.givechange(Number(refund));
     console.log('refundMoney=>', givechange);
-    setTimeout(() => {
-      updateTransaction(postdata, 'cancel', action);
-    }, 3000);
+    updateTransaction(postdata, 'cancel', action);
   };
 
   const errorTransaction = async () => {
-    await MdbTurnOff();
+    MdbTurnOff();
     let postdata = {
       action: 'error',
       payment: {
@@ -316,13 +309,11 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
       transactionID: transaction.transactionID,
       kioskStatus: {msg: msgMdb, code: statusCode},
     };
-    setTimeout(async () => {
-      await updateTransaction(postdata, 'cancel', 'error');
-    }, 3000);
+    updateTransaction(postdata, 'cancel', 'error');
   };
 
   const closePayment = async () => {
-    await MdbTurnOff();
+    MdbTurnOff();
     setDisableCancel(true);
     let postdata = {
       action: 'cancel',
@@ -334,9 +325,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
       },
       transactionID: transaction.transactionID,
     };
-    setTimeout(() => {
-      updateTransaction(postdata, 'cancel', 'cancel');
-    }, 3000);
+    updateTransaction(postdata, 'cancel', 'cancel');
   };
 
   return (

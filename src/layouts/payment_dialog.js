@@ -51,55 +51,27 @@ const Payment = ({dismiss, prod}) => {
   console.log(product.slotID);
   console.log(':::::', cashStatus);
 
-  const startIntervalMaketrans = () => {
-    const intervalId = setInterval(() => {
-      timeout -= 1;
-      setMakeTransTO(timeout);
-      console.log('Trans to:', timeout);
-      if (timeout <= 0) {
-        stopIntervalMaketrans();
-        setStopTimeout(false);
-        setPaymentReady(false);
-        setSelectPay(true);
-        setLoading(false);
-        setacceptErr(true);
-        setTimeout(() => {
-          setacceptErr(false);
-        }, 3000);
-      }
-    }, 1000);
-
-    return intervalId;
-  };
-
-  const stopIntervalMaketrans = () => {
-    if (intervalTransRef.current) {
-      clearInterval(intervalTransRef.current);
-      intervalTransRef.current = null;
-      timeout = 30;
-      setMakeTransTO(30);
-    }
-  };
-
   const openCoinAndBill = async type => {
-    // Script.checkInRecheck(mqttClient);
     console.log('START openCoinAndBill');
-    if (!intervalTransRef.current) {
-      intervalTransRef.current = startIntervalMaketrans();
-    }
     if (type === 'Cash') {
       console.log('OPEN Accept!!!');
       let active = true;
       const callbackCoin = await maincontroll.setcoinaccept(active);
-      //await maincontroll.delay2();
       const callbackBill = await maincontroll.setbillaccept(active);
       console.log('COIN:', callbackCoin);
       console.log('BILL:', callbackBill);
+      if (!callbackCoin.result || !callbackBill.result) {
+        console.log('Bill and Cash fail');
+        setTimeout(() => {
+          openCoinAndBill('Cash');
+        }, 1000);
+        return;
+      }
     }
-    await handleTransaction(type);
+    handleTransaction(type);
   };
 
-  const handleTransaction = async type => {
+  const handleTransaction = type => {
     console.log('PROD==========>', product);
     let prodPrice =
       product.price.sale > 0 ? product.price.sale : product.price.normal;
@@ -121,22 +93,20 @@ const Payment = ({dismiss, prod}) => {
       console.log('TRANSACTION:', callback);
       var data = callback;
       if (data.code === 200) {
-        stopIntervalMaketrans();
+        //stopIntervalMaketrans();
         setLoading(false);
         if (type === 'Cash') {
           setTranID(data.transactionID);
-        } else {
-          setTranID(data);
-        }
-        if (type === 'Cash') {
           setSelectQr(false);
           setSelectCash(true);
           setSelectCard(false);
         } else if (type === 'ThaiQR') {
+          setTranID(data);
           setSelectQr(true);
           setSelectCash(false);
           setSelectCard(false);
         } else if (type === 'Card') {
+          setTranID(data);
           setSelectQr(false);
           setSelectCash(false);
           setSelectCard(true);
@@ -147,7 +117,7 @@ const Payment = ({dismiss, prod}) => {
     });
   };
 
-  const updateTransaction = async (postdata, action, req) => {
+  const updateTransaction = (postdata, action, req) => {
     if (action === 'complete') {
       onPaymentSccess();
     } else if (action === 'cancel') {
