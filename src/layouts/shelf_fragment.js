@@ -106,21 +106,21 @@ export default function Shelf() {
   };
 
   const selectProd = item => {
-    if (productInsideElevator === 'no') {
-      Script.checkInRecheck(ClientData);
-      setProd(item);
-      setOnSelect(true);
-      // clearInterval(this.activeIntervalTimeout);
-      //setTimeout(() => {
-      console.log(onSelect);
-      setPayment(true);
-      //}, 500);
-    } else {
-      setPICKPROD(true);
-      setTimeout(() => {
-        setPICKPROD(false);
-      }, 3000);
-    }
+    //if (productInsideElevator === 'no') {
+    Script.checkInRecheck(ClientData);
+    setProd(item);
+    setOnSelect(true);
+    // clearInterval(this.activeIntervalTimeout);
+    //setTimeout(() => {
+    console.log(onSelect);
+    setPayment(true);
+    //}, 500);
+    // } else {
+    //   setPICKPROD(true);
+    //   setTimeout(() => {
+    //     setPICKPROD(false);
+    //   }, 3000);
+    // }
   };
 
   const cancalPayment = () => {

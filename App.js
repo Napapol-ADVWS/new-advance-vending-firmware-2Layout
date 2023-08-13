@@ -10,12 +10,12 @@ export default function App() {
   LogBox.ignoreAllLogs();
   async function connectMDB() {
     await maincontroll.open();
-    setTimeout(async () => {
-      const callbackCoin = await maincontroll.setcoinaccept(false);
-      const callbackBill = await maincontroll.setbillaccept(false);
-      console.log(callbackCoin);
-      console.log(callbackBill);
-    }, 1000);
+    // setTimeout(async () => {
+    const callbackCoin = await maincontroll.setcoinaccept(true);
+    const callbackBill = await maincontroll.setbillaccept(true);
+    console.log(callbackCoin);
+    console.log(callbackBill);
+    // }, 1000);
   }
   React.useEffect(() => {
     console.log('APP CONNECT MDB');

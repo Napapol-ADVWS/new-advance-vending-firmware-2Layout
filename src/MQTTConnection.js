@@ -57,6 +57,7 @@ const connect = (
         if (res) {
           cb(res);
         }
+
         // try {
         //   var res = JSON.parse(msg.data);
         //   switch (res.cmd) {
@@ -133,7 +134,7 @@ const connect = (
         });
         if (topicCheckInStatus) {
           console.log('CHECK-IN');
-          const coinStack = await Script.checkCoinStack();
+          const coinStack = {}; //await Script.checkCoinStack();
           var payload = {
             coinStack: coinStack,
             boardStatus: true,

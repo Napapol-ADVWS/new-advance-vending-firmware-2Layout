@@ -1112,7 +1112,7 @@ maincontroll.delay2 = async () => {
   let result = new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve();
-    }, 1500);
+    }, 3000);
   });
   return result;
 };
