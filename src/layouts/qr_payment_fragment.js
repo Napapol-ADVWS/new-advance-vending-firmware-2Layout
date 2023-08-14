@@ -180,7 +180,9 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setVendingStatus(res.message);
           maincontroll.off('dispense');
           setTurnOff(true);
-          onPaymentSuccess();
+          setTimeout(() => {
+            onPaymentSuccess();
+          }, 3000);
           break;
         case '50203':
           setVendingStatus(res.message);

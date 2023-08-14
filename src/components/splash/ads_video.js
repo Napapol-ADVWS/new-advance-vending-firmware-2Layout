@@ -18,7 +18,7 @@ const AdsVideo = () => {
       />
       <Video
         source={{
-          uri: 'https://storage.googleapis.com/video-vending/YL_VDO_MBK_2.mp4',
+          uri: 'https://storage.googleapis.com/video-vending/JewelryBox01.mp4',
         }}
         repeat={true}
         style={Styles.video_container}

@@ -165,7 +165,9 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
         case '50402':
           setVendingStatus(res.message);
           maincontroll.off('dispense');
-          onPaymentSuccess();
+          setTimeout(() => {
+            onPaymentSuccess();
+          }, 3000);
           break;
         case '50203':
           setVendingStatus(res.message);

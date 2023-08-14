@@ -197,7 +197,7 @@ export default function Shelf() {
                 KIOSK : {KIOSKID}
               </RN.Text>
               <RN.Text style={Styles.vending_detail_text}>
-                Version : 3.0.3
+                Version : 3.0.4
               </RN.Text>
               <RN.Text style={Styles.vending_detail_text}>
                 Internet :{' '}

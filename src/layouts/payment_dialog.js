@@ -24,7 +24,7 @@ import Script from '../script';
 
 import moment from 'moment';
 
-var timeout = 30;
+var timeout = 10;
 const Payment = ({dismiss, prod}) => {
   const [product] = React.useState(prod);
   const [selectPay, setSelectPay] = React.useState(true);
@@ -63,7 +63,13 @@ const Payment = ({dismiss, prod}) => {
       if (!callbackCoin.result || !callbackBill.result) {
         console.log('Bill and Cash fail');
         setTimeout(() => {
-          openCoinAndBill('Cash');
+          timeout--;
+          if (timeout <= 0) {
+            dismiss();
+            timeout = 10;
+          } else {
+            openCoinAndBill('Cash');
+          }
         }, 1000);
         return;
       }
@@ -94,6 +100,7 @@ const Payment = ({dismiss, prod}) => {
       var data = callback;
       if (data.code === 200) {
         //stopIntervalMaketrans();
+        timeout = 10;
         setLoading(false);
         if (type === 'Cash') {
           setTranID(data.transactionID);

@@ -66,7 +66,9 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
         case '50402':
           setVendingStatus(res.message);
           maincontroll.off('dispense');
-          checkChangeMoney();
+          setTimeout(() => {
+            checkChangeMoney();
+          }, 3000);
           break;
         case '50203':
           setVendingStatus(res.message);
