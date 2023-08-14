@@ -36,7 +36,7 @@ const Payment = ({dismiss, prod}) => {
   const [stopTimeout, setStopTimeout] = React.useState(false);
   const [tranID, setTranID] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [maketransTO, setMakeTransTO] = React.useState(30);
+  const [maketransTO, setMakeTransTO] = React.useState(10);
   const [acceptErr, setacceptErr] = React.useState(false);
 
   const [cashStatus] = useRecoilState(GOLBAL.cash_method);
@@ -52,7 +52,6 @@ const Payment = ({dismiss, prod}) => {
   console.log(':::::', cashStatus);
 
   const openCoinAndBill = async type => {
-    console.log('START openCoinAndBill');
     if (type === 'Cash') {
       console.log('OPEN Accept!!!');
       let active = true;
@@ -64,7 +63,12 @@ const Payment = ({dismiss, prod}) => {
         console.log('Bill and Cash fail');
         setTimeout(() => {
           timeout--;
+          setMakeTransTO(timeout);
           if (timeout <= 0) {
+            setacceptErr(true);
+            setTimeout(() => {
+              setacceptErr(false);
+            }, 3500);
             dismiss();
             timeout = 10;
           } else {
