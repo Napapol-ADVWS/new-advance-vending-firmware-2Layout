@@ -14,7 +14,7 @@ export default function Splash() {
   const height = new Animated.Value(250);
   const [onAds, setOnAds] = useRecoilState(GLOBAL.ads);
   const [isVideo, setIsVideo] = React.useState('');
-  const [isVideoReady, setIsVideoReady] = React.useState(false);
+  const [isVideoReady, setIsVideoReady] = React.useState(true);
   const setVendingReady = useSetRecoilState(GLOBAL.vendingReady);
 
   Animated.loop(
