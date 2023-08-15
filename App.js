@@ -16,12 +16,6 @@ export default function App() {
       console.log(callbackCoin);
       console.log(callbackBill);
     }, 1000);
-    // setInterval(async () => {
-    //   //const callbackCoin = await maincontroll.setcoinaccept(false);
-    //   const callbackBill = await maincontroll.setbillaccept(false);
-    //   //console.log(callbackCoin);
-    //   console.log(callbackBill);
-    // }, 2000);
   }
 
   React.useEffect(() => {

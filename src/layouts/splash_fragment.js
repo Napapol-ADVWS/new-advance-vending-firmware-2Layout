@@ -8,7 +8,9 @@ import * as GLOBAL from '../globalState';
 import {useSetRecoilState, useRecoilState} from 'recoil';
 import Signal from '../components/shelf/Signal';
 import AdsVideo from '../components/splash/ads_video';
-
+import Script from '../script';
+import MQTTConnection from '../MQTTConnection';
+var checkInMQTT = false;
 export default function Splash() {
   const width = new Animated.Value(250);
   const height = new Animated.Value(250);
@@ -16,6 +18,25 @@ export default function Splash() {
   const [isVideo, setIsVideo] = React.useState('');
   const [isVideoReady, setIsVideoReady] = React.useState(false);
   const setVendingReady = useSetRecoilState(GLOBAL.vendingReady);
+  const [ClientData] = useRecoilState(GLOBAL.mqttClient);
+  const [temperature] = useRecoilState(GLOBAL.temperature);
+
+  React.useEffect(() => {
+    checkInMQTT = setInterval(() => {
+      var payload = {
+        coinStack: Script.getLastCoinStack(),
+        boardStatus: true,
+        mdbStatus: true,
+        temperature: temperature,
+      };
+      console.log('checkin:::', ClientData);
+      MQTTConnection.publicCheckin(ClientData, payload);
+    }, 60000);
+
+    return () => {
+      clearInterval(checkInMQTT);
+    };
+  }, []);
 
   Animated.loop(
     Animated.timing(width, {

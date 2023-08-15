@@ -189,15 +189,8 @@ const publicCheckin = async mqttClient => {
   }
 };
 
-const publicQRPaymentResult = async mqttClient => {
+const publicQRPaymentResult = (mqttClient, payload) => {
   try {
-    const coinStack = await Script.checkCoinStack();
-    var payload = {
-      coinStack: coinStack,
-      boardStatus: true,
-      mdbStatus: true,
-    };
-    console.log(payload);
     mqttClient.publish('/checkin', JSON.stringify(payload), 2, false);
     console.log('Message published Check In successfully!');
     return true;

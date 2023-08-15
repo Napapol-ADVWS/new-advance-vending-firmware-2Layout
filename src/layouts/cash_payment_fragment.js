@@ -28,24 +28,22 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
   const [msgMdb, setMsgMdb] = React.useState('');
 
   let moneyInput = {coin: 0, bill: 0, total: 0};
-
+  let firstload = false;
+  let time_counter = false;
   React.useEffect(() => {
-    startMDB();
-    const interval = setInterval(() => {
+    if (!firstload) {
+      startMDB();
+      firstload = true;
+    }
+    if (disableCancel) return;
+    if (timer <= 0) {
+      closePayment();
+      return;
+    }
+    time_counter = setTimeout(() => {
       setTimer(prevCount => prevCount - 1);
       console.log('timer cash : ', timer);
     }, 1000);
-    if (timer <= 0) {
-      clearInterval(interval);
-      closePayment();
-    }
-    if (disableCancel) {
-      clearInterval(interval);
-    }
-    return async () => {
-      clearInterval(interval);
-      //await maincontroll.off('dispense');
-    };
   }, [timer, disableCancel]);
 
   const startMDB = () => {
@@ -143,6 +141,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
   const receiveMoney = () => {
     maincontroll.on('receivemoney', async res => {
       //inputMoney = inputValue;
+      clearTimeout(time_counter);
       setTimer(60);
       console.log('MONEY:', inputMoney);
       console.log('AMOUNT:::::', res);
@@ -156,13 +155,19 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
       if (Number(inputMoney) >= Number(prodPrice)) {
         MdbTurnOff();
         setDisableCancel(true);
-        const callbackCoin2 = await maincontroll.setcoinaccept(false);
-        const callbackBill2 = await maincontroll.setbillaccept(false);
-        console.log('callbackCoin:', callbackCoin2);
-        console.log('callbackBill:', callbackBill2);
-        maincontroll.clearwait();
-        dispenseStatus();
-        await dispenseProduct();
+        try {
+          const callbackCoin2 = await maincontroll.setcoinaccept(false);
+          const callbackBill2 = await maincontroll.setbillaccept(false);
+          console.log('callbackCoin:', callbackCoin2);
+          console.log('callbackBill:', callbackBill2);
+          maincontroll.clearwait();
+          dispenseStatus();
+          await dispenseProduct();
+        } catch (error) {
+          maincontroll.clearwait();
+          dispenseStatus();
+          await dispenseProduct();
+        }
       }
     });
   };
@@ -302,9 +307,9 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
         setMsgError(ERR.msgError(callbackDispense.code));
         setStatusCode(String(callbackDispense.code));
         setMsgMdb(callbackDispense.message);
-        setTimeout(() => {
-          dispenseProduct();
-        }, 3000);
+        // setTimeout(() => {    ????
+        //   dispenseProduct();
+        // }, 3000);
       } else if (
         !callbackDispense.result &&
         callbackDispense.code === '50203'
@@ -406,11 +411,15 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
     setDisableCancel(true);
     setShowCancel(true);
     MdbTurnOff();
-    const callbackCoin = await maincontroll.setcoinaccept(false);
-    const callbackBill = await maincontroll.setbillaccept(false);
-    console.log('callbackCoin:', callbackCoin);
-    console.log('callbackBill:', callbackBill);
-    await refundMoney('cancel');
+    try {
+      const callbackCoin = await maincontroll.setcoinaccept(false);
+      const callbackBill = await maincontroll.setbillaccept(false);
+      console.log('callbackCoin:', callbackCoin);
+      console.log('callbackBill:', callbackBill);
+      await refundMoney('cancel');
+    } catch (error) {
+      await refundMoney('cancel');
+    }
   };
 
   return (

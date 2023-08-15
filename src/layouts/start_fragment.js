@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {Animated} from 'react-native';
 import * as RN from 'react-native';
 import * as navigate from '../navigator/RootNavigation';
 import STORE from '../storage';
@@ -13,9 +12,7 @@ import MQTTConnection from '../MQTTConnection';
 import Script from '../script';
 import {Styles} from '../styles/splash_style';
 import LinearGradient from 'react-native-linear-gradient';
-import Modal from 'react-native-modal';
 import Signal from '../components/shelf/Signal';
-import Restart from 'react-native-restart';
 
 const maincontroll = require('../../maincontroll');
 let optionsMqtt = {};
@@ -27,7 +24,6 @@ export default function StartScreen() {
   const [isPaymentMethod] = useRecoilState(GLOBAL.payment_method);
   const [isDecodedToken] = useRecoilState(GLOBAL.decodeToken);
   const [ClientData] = useRecoilState(GLOBAL.mqttClient);
-  const [vendingReady] = useRecoilState(GLOBAL.vendingReady);
   const onSetKioskID = useSetRecoilState(GLOBAL.KIOSKID);
   const onSetRegisterKey = useSetRecoilState(GLOBAL.REGISTERKEY);
   const onSetToken = useSetRecoilState(GLOBAL.TOKEN);
@@ -52,9 +48,6 @@ export default function StartScreen() {
 
   React.useEffect(() => {
     runApp();
-    return () => {
-      runApp();
-    };
   }, []);
 
   const runApp = async () => {

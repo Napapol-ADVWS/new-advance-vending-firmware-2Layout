@@ -3,20 +3,25 @@ import moment from 'moment';
 import STORE from './storage';
 import jwt_decode from 'jwt-decode';
 import POST from './protocol';
+import Script from './script';
 
 const maincontroll = require('../maincontroll');
 var kioskID;
 let ownerID;
+let coinStack;
 
-const checkIn = ClientData => {
+const checkIn = async ClientData => {
   console.log('start check in', ClientData);
   if (ClientData && Object.keys(ClientData).length > 0) {
     console.log('check in');
-    MQTTConnection.publicCheckin(ClientData);
+    const coinStack = await Script.checkCoinStack();
+    var payload = {
+      coinStack: coinStack,
+      boardStatus: true,
+      mdbStatus: true,
+    };
+    MQTTConnection.publicCheckin(ClientData, payload);
   }
-  setTimeout(() => {
-    checkIn(ClientData);
-  }, 60000 * 3);
 };
 
 const checkInV2 = async () => {
@@ -91,7 +96,11 @@ const checkCoinStack = async () => {
   let coin2 = getCoinStack.coin2 ? getCoinStack.coin2 : 0;
   let coin5 = getCoinStack.coin5 ? getCoinStack.coin5 : 0;
   let coin10 = getCoinStack.coin10 ? getCoinStack.coin10 : 0;
-  let coinStack = {C1: coin1, C2: coin2, C5: coin5, C10: coin10};
+  coinStack = {C1: coin1, C2: coin2, C5: coin5, C10: coin10};
+  return coinStack;
+};
+
+const getLastCoinStack = async () => {
   return coinStack;
 };
 
@@ -102,4 +111,5 @@ export default {
   vendingStatus,
   checkCoinStack,
   checkInRecheck,
+  getLastCoinStack,
 };

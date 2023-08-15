@@ -269,9 +269,9 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
     updateTransaction(postdata, 'complete');
   };
 
-  const MdbTurnOff = async () => {
+  const MdbTurnOff = () => {
     // clearInterval(this.timerInterval);
-    await maincontroll.off('receivemoney');
+    maincontroll.off('receivemoney');
   };
 
   const refundMoney = async action => {

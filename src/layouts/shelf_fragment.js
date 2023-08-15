@@ -105,7 +105,7 @@ export default function Shelf() {
     }
   };
 
-  const selectProd = item => {
+  const selectProd = async item => {
     if (productInsideElevator === 'no') {
       Script.checkInRecheck(ClientData);
       setProd(item);

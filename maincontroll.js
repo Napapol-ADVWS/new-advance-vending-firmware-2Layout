@@ -1117,6 +1117,13 @@ maincontroll.delay2 = async () => {
   return result;
 };
 
+maincontroll.testReject = () => {
+  let result = new Promise((resolve, reject) => {
+    return reject('Other Command existing'); // existing Queue
+  });
+  return result;
+};
+
 maincontroll.clearwait = function () {
   clearTimeout(eventchecktimeout);
   event_name_waiting = false; // clear self function;

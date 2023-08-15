@@ -3,13 +3,8 @@ import * as React from 'react';
 import * as RN from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Styles} from '../styles/payment_style';
-import * as navigate from '../navigator/RootNavigation';
 import {BarIndicator} from 'react-native-indicators';
 import Modal from 'react-native-modal';
-
-import Cash from '../components/payment/cash_select';
-import Qr from '../components/payment/qr_select';
-import CraditCard from '../components/payment/card_select';
 import QrType from '../components/payment/qr_type';
 
 import {useRecoilState, useSetRecoilState} from 'recoil';
@@ -20,9 +15,6 @@ import POST from '../protocol';
 import CashPaymentScreen from './cash_payment_fragment';
 import QRPaymentScreen from './qr_payment_fragment';
 import CardPaymentScreen from './card_payment_fragment';
-import Script from '../script';
-
-import moment from 'moment';
 
 var timeout = 10;
 const Payment = ({dismiss, prod}) => {
@@ -61,24 +53,11 @@ const Payment = ({dismiss, prod}) => {
       console.log('BILL:', callbackBill);
       if (!callbackCoin.result || !callbackBill.result) {
         console.log('Bill and Cash fail');
-        setTimeout(() => {
-          timeout--;
-          setMakeTransTO(timeout);
-          if (timeout <= 0) {
-            setacceptErr(true);
-            setTimeout(() => {
-              setacceptErr(false);
-            }, 3500);
-            dismiss();
-            timeout = 10;
-          } else {
-            openCoinAndBill('Cash');
-          }
-        }, 1000);
-        return;
+        return false;
       }
     }
     handleTransaction(type);
+    return true;
   };
 
   const handleTransaction = type => {
@@ -153,7 +132,30 @@ const Payment = ({dismiss, prod}) => {
     setPaymentReady(true);
     setSelectPay(false);
     setLoading(true);
-    await openCoinAndBill('Cash');
+    var openAccept = false;
+    try {
+      openAccept = await openCoinAndBill('Cash');
+    } catch (error) {
+      console.log('openCoinAndBill:::', error);
+    }
+    console.log('openAccept', openAccept);
+    if (openAccept !== true) {
+      timeout--;
+      setMakeTransTO(timeout);
+      if (timeout <= 0) {
+        setacceptErr(true);
+        setTimeout(() => {
+          setacceptErr(false);
+          dismiss();
+        }, 3500);
+        timeout = 10;
+      } else {
+        setTimeout(() => {
+          onSelectCash();
+        }, 1000);
+      }
+      return;
+    }
   };
 
   const onSelectQr = payType => {
