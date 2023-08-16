@@ -10,7 +10,7 @@ import ERR from '../msgError';
 import moment from 'moment';
 
 const maincontroll = require('../../maincontroll');
-
+let dispenseTimeout = 0;
 const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
   const [LoadDispense, setLoadDispense] = React.useState(false);
   const [dispenseError, setDispenseError] = React.useState(false);
@@ -31,23 +31,24 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
   const [paymentReady] = useRecoilState(GOLBAL.paymentReady);
 
   let moneyInput = {coin: 0, bill: 0, total: 0};
+  let firstload = false;
+  let time_counter = false;
 
   React.useEffect(() => {
-    startMDB();
-    checkInputQRPayment();
-    const interval = setInterval(() => {
-      setTimer(prevCount => prevCount - 1);
-    }, 1000);
+    if (!firstload) {
+      startMDB();
+      checkInputQRPayment();
+      firstload = true;
+    }
+    if (disableCancel) return;
     if (timer <= 0) {
-      clearInterval(interval);
       closePayment();
+      return;
     }
-    if (disableCancel) {
-      clearInterval(interval);
-    }
-    return () => {
-      clearInterval(interval);
-    };
+    time_counter = setTimeout(() => {
+      setTimer(prevCount => prevCount - 1);
+      console.log('timer qr : ', timer);
+    }, 1000);
   }, [timer, disableCancel]);
 
   const startMDB = () => {
@@ -65,13 +66,28 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
   const checkInputQRPayment = async () => {
     if (QRPaymentResult.status === 'success' && paymentReady) {
       dispenseStatus();
+      clearTimeout(time_counter);
       if (!PaymentSuccess) {
         console.log('PaymentSuccess::', QRPaymentResult);
         setPaymentSuccess(true);
         setDisableCancel(true);
-        const callbackDispense = await maincontroll.dispense(
-          Number(product.slot.col),
-        );
+        var callbackDispense = false;
+        try {
+          callbackDispense = await maincontroll.dispense(
+            Number(product.slot.col),
+          );
+        } catch (error) {}
+        if (callbackDispense.result !== true) {
+          if (dispenseTimeout > 3) {
+          } else {
+            setTimeout(() => {
+              dispenseTimeout++;
+              setPaymentSuccess(false);
+              checkInputQRPayment();
+            }, 3000);
+            return;
+          }
+        }
         if (callbackDispense && !callbackDispense.result) {
           if (!callbackDispense.result && callbackDispense.code === '104001') {
             setVendingStatus(callbackDispense.message);

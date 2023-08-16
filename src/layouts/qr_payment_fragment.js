@@ -74,6 +74,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
       dispenseStatus();
       if (!PaymentSuccess) {
         console.log('PaymentSuccess::', QRPaymentResult);
+        clearTimeout(time_counter);
         setPaymentSuccess(true);
         setDisableCancel(true);
         var callbackDispense = false;
