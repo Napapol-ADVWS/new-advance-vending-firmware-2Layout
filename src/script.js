@@ -53,13 +53,14 @@ const checkInRecheck = ClientData => {
   MQTTConnection.publicCheckin(ClientData);
 };
 
-const checkSignal = setSignal => {
+const checkSignal = (setSignal, setPingMS) => {
   let start = Date.now();
   fetch('https://www.advancevending.net/')
     .then(response => {
       if (response) {
         const pingMS = Date.now() - start;
-        if (pingMS >= 0.0 && pingMS <= 99.99) {
+        setPingMS(pingMS);
+        if (pingMS >= 0.0 && pingMS <= 250.99) {
           setSignal(4);
         } else if (pingMS >= 100.0 && pingMS <= 299.99) {
           setSignal(3);
@@ -71,9 +72,6 @@ const checkSignal = setSignal => {
           setSignal(0);
         }
       }
-      setTimeout(() => {
-        checkSignal(setSignal);
-      }, 10000);
     })
     .catch(error => {
       console.log(error);

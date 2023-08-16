@@ -52,7 +52,6 @@ export default function StartScreen() {
 
   const runApp = async () => {
     Script.vendingStatus(productInsideElevator, pickupDoor, temperature);
-    Script.checkSignal(setSignal);
     getKisokData(res => {
       console.log('START:::', res);
       if (res) {

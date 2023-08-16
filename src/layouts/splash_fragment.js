@@ -20,18 +20,23 @@ export default function Splash() {
   const setVendingReady = useSetRecoilState(GLOBAL.vendingReady);
   const [ClientData] = useRecoilState(GLOBAL.mqttClient);
   const [temperature] = useRecoilState(GLOBAL.temperature);
+  const setSignal = useSetRecoilState(GLOBAL.signals);
+  const setPingMS = useSetRecoilState(GLOBAL.pingMS);
+  const [pingMS] = useRecoilState(GLOBAL.pingMS);
 
   React.useEffect(() => {
     checkInMQTT = setInterval(() => {
+      Script.checkSignal(setSignal, setPingMS);
       var payload = {
         coinStack: Script.getLastCoinStack(),
         boardStatus: true,
         mdbStatus: true,
         temperature: temperature,
+        ping: pingMS,
       };
       console.log('checkin:::', ClientData);
       MQTTConnection.publicCheckin(ClientData, payload);
-    }, 60000);
+    }, 30000);
 
     return () => {
       clearInterval(checkInMQTT);

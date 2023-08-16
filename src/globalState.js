@@ -186,3 +186,8 @@ export const vendingReady = atom({
   key: 'vendingReady',
   default: false,
 });
+
+export const pingMS = atom({
+  key: 'pingMS',
+  default: 0,
+});

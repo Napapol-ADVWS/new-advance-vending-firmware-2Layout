@@ -12,6 +12,7 @@ import Script from '../script';
 
 const maincontroll = require('../../maincontroll');
 
+let dispenseTimeout = 0;
 const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
   const [LoadDispense, setLoadDispense] = React.useState(false);
   const [dispenseError, setDispenseError] = React.useState(false);
@@ -34,29 +35,30 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
   const [paymentReady] = useRecoilState(GOLBAL.paymentReady);
 
   let moneyInput = {coin: 0, bill: 0, total: 0};
+  let firstload = false;
+  let time_counter = false;
 
   React.useEffect(() => {
-    startMDB();
-    checkInputQRPayment();
-    const interval = setInterval(() => {
-      setTimer(prevCount => prevCount - 1);
-    }, 1000);
+    if (!firstload) {
+      startMDB();
+      checkInputQRPayment();
+      firstload = true;
+    }
+    if (disableCancel) return;
     if (timer <= 0) {
-      clearInterval(interval);
       closePayment();
+      return;
     }
-    if (disableCancel) {
-      clearInterval(interval);
-    }
-    return () => {
-      console.log('Clear !!!!');
-      clearInterval(interval);
-    };
+    time_counter = setTimeout(() => {
+      setTimer(prevCount => prevCount - 1);
+      console.log('timer qr : ', timer);
+    }, 1000);
   }, [timer, disableCancel]);
 
   const startMDB = () => {
     console.log('startMDB');
     if (!startSuccess) {
+      dispenseTimeout = 0;
       console.log(startSuccess);
       let tempBase64 = QrPayment;
       let imageQr = tempBase64 + transaction.qr.imageWithBase64;
@@ -74,9 +76,23 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
         console.log('PaymentSuccess::', QRPaymentResult);
         setPaymentSuccess(true);
         setDisableCancel(true);
-        const callbackDispense = await maincontroll.dispense(
-          Number(product.slot.col),
-        );
+        var callbackDispense = false;
+        try {
+          callbackDispense = await maincontroll.dispense(
+            Number(product.slot.col),
+          );
+        } catch (error) {}
+        if (callbackDispense.result !== true) {
+          if (dispenseTimeout > 3) {
+          } else {
+            setTimeout(() => {
+              dispenseTimeout++;
+              setPaymentSuccess(false);
+              checkInputQRPayment();
+            }, 3000);
+            return;
+          }
+        }
         console.log('callbackDispense::', callbackDispense);
         if (callbackDispense && !callbackDispense.result) {
           if (!callbackDispense.result && callbackDispense.code === '104001') {
@@ -148,11 +164,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
               setStatusCode(callbackDispense.code);
               setMsgMdb(callbackDispense.message);
               setTimeout(async () => {
-                await refundMoney(
-                  'error',
-                  callbackDispense.message,
-                  callbackDispense.code,
-                );
+                await refundMoney('error', '9999', 'Process Error .');
               }, 3000);
             } else {
               setVendingStatus('Process Error .');
