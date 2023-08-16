@@ -53,6 +53,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
 
   const startMDB = () => {
     if (!startSuccess) {
+      dispenseTimeout = 0;
       console.log(startSuccess);
       let tempBase64 = QrPayment;
       let imageQr = tempBase64 + transaction.qr.imageWithBase64;
