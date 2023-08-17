@@ -98,7 +98,7 @@ const checkCoinStack = async () => {
   return coinStack;
 };
 
-const getLastCoinStack = async () => {
+const getLastCoinStack = () => {
   return coinStack;
 };
 

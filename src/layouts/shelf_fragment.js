@@ -107,7 +107,6 @@ export default function Shelf() {
 
   const selectProd = async item => {
     if (productInsideElevator === 'no') {
-      Script.checkInRecheck(ClientData);
       setProd(item);
       setOnSelect(true);
       // clearInterval(this.activeIntervalTimeout);

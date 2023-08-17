@@ -172,15 +172,8 @@ const connectMQTT = mqttClient => {
   mqttClient.connect();
 };
 
-const publicCheckin = async mqttClient => {
+const publicCheckin = (mqttClient, payload) => {
   try {
-    const coinStack = await Script.checkCoinStack();
-    var payload = {
-      coinStack: coinStack,
-      boardStatus: true,
-      mdbStatus: true,
-    };
-    console.log(payload);
     mqttClient.publish('/checkin', JSON.stringify(payload), 2, false);
     console.log('Message published Check In successfully!');
     return true;

@@ -202,7 +202,7 @@ const Setting = () => {
             <Motortest />
             <LiftTest />
           </RN.View>
-          {/* <SettingRowLift /> */}
+          <SettingRowLift />
           <SettingCenterLift />
           <RN.View style={Styles.btn_clearJam_container}>
             <RN.TouchableOpacity
