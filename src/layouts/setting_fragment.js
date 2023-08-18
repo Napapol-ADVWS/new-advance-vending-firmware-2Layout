@@ -46,7 +46,7 @@ const Setting = () => {
     runApp();
   }, []);
 
-  const runApp = async () => {
+  const runApp =  () => {
     STORE.getItem('KIOSKID', response => {
       console.log('KIOSKID', response);
       if (response.result) {
@@ -64,13 +64,13 @@ const Setting = () => {
     });
   };
 
-  const onSaveKiosk = async () => {
+  const onSaveKiosk =  () => {
     setIsLoading(true);
     var postdata = {
       kioskID: kioskID,
       registerKey: registerKey,
     };
-    POST.register(postdata, async callback => {
+    POST.register(postdata,  callback => {
       console.log(callback);
       if (callback.code === 200 && callback.data) {
         setIsLoading(false);
@@ -114,7 +114,7 @@ const Setting = () => {
 
   const dismissModal = () => setModalTest(false);
 
-  const rebootApp = async () => {
+  const rebootApp = () => {
     // try {
     //   await RebootModule.rebootDevice();
     //   console.log('Device is rebooting...');
