@@ -14,9 +14,7 @@ export default class Clock extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    if (this._isMounted) {
-      this.startClock();
-    }
+    this.startClock();
   }
 
   componentWillUnmount() {

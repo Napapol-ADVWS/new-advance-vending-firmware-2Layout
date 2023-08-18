@@ -22,7 +22,7 @@ import Script from '../script';
 
 let timeout = 60;
 let nextPage = 0;
-
+let onScrollTime;
 export default function Shelf() {
   const [category, setCatagory] = React.useState({});
   const [categoryBtn, setCatagoryBtn] = React.useState('all');
@@ -88,9 +88,6 @@ export default function Shelf() {
     if (key === 'all') {
       setCatagoryBtn(key);
       isSetInventory(inventoryAll);
-      setSelectTimeout = setTimeout(() => {
-        setOnSelect(false);
-      }, 100);
     } else {
       inventoryAll.map(item => {
         if (item.category === key) {
@@ -99,10 +96,10 @@ export default function Shelf() {
       });
       isSetInventory(data);
       setCatagoryBtn(key);
-      setSelectTimeout = setTimeout(() => {
-        setOnSelect(false);
-      }, 100);
     }
+    setSelectTimeout = setTimeout(() => {
+      setOnSelect(false);
+    }, 100);
   };
 
   const selectProd = async item => {
@@ -155,7 +152,9 @@ export default function Shelf() {
   const onScrollShelf = () => {
     console.log('onScrollShelf');
     setIsScrollShelf(true);
-    setTimeout(() => {
+    clearTimeout(onScrollTime);
+    onScrollTime = setTimeout(() => {
+      console.log('LEAK ?');
       setIsScrollShelf(false);
     }, 10000);
   };

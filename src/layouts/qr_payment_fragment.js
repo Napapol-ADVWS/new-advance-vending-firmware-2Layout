@@ -106,8 +106,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setTimeout(async () => {
               await refundMoney(
                 'error',
-                callbackDispense.message,
-                callbackDispense.code,
+                'No VMC Event: selectionnumber',
+                '104001',
               );
             }, 3000);
           } else if (
@@ -121,11 +121,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setStatusCode(callbackDispense.code);
             setMsgMdb(callbackDispense.message);
             setTimeout(async () => {
-              await refundMoney(
-                'error',
-                callbackDispense.message,
-                callbackDispense.code,
-              );
+              await refundMoney('error', 'selection pause', '50204');
             }, 3000);
           } else if (
             !callbackDispense.result &&
@@ -150,11 +146,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setStatusCode(callbackDispense.code);
             setMsgMdb(callbackDispense.message);
             setTimeout(async () => {
-              await refundMoney(
-                'error',
-                callbackDispense.message,
-                callbackDispense.code,
-              );
+              await refundMoney('error', 'Elevator error', '50207');
             }, 3000);
           } else {
             if (!callbackDispense.result) {
@@ -165,7 +157,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
               setStatusCode(callbackDispense.code);
               setMsgMdb(callbackDispense.message);
               setTimeout(async () => {
-                await refundMoney('error', '9999', 'Process Error .');
+                await refundMoney('error', 'Process Error .', '9999');
               }, 3000);
             } else {
               setVendingStatus('Process Error .');
@@ -174,7 +166,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
               setMsgError('เกิดข้อผิดพลาดในการทำรายการ .');
               setStatusCode('9999');
               setMsgMdb('Process Error .');
-              errorTransaction();
+              errorTransaction('Process Error .', '9999');
             }
           }
         }
@@ -205,7 +197,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
           maincontroll.off('dispense');
-          await refundMoney('error', res.message, res.code);
+          await refundMoney('error', 'selection doesn’t exist', '50203');
           break;
         case '50204':
           setVendingStatus(res.message);
@@ -215,7 +207,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setStatusCode(res.code);
           setMsgMdb(res.message);
           maincontroll.off('dispense');
-          await refundMoney('error', res.message, res.code);
+          await refundMoney('error', 'selection pause', '50204');
           break;
         case '50410':
           setLoadDispense(true);
@@ -240,7 +232,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setStatusCode(res.code);
           setMsgMdb(res.message);
           maincontroll.off('dispense');
-          await refundMoney('error', res.message, res.code);
+          await refundMoney('error', 'selection doesn’t exist', '50403');
           break;
         case '50205':
           setVendingStatus(res.message);
@@ -258,7 +250,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setStatusCode(res.code);
           setMsgMdb(res.message);
           maincontroll.off('dispense');
-          await refundMoney('error', res.message, res.code);
+          await refundMoney('error', 'Elevator error', '50207');
           break;
         default:
           break;
@@ -287,7 +279,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
     maincontroll.off('receivemoney');
   };
 
-  const refundMoney = async action => {
+  const refundMoney = async (action, msg, codeStatus) => {
     console.log('start refund');
     MdbTurnOff();
     let postdata = {
@@ -299,7 +291,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
         changeMoney: 0,
       },
       transactionID: transaction.transactionID,
-      kioskStatus: {msg: msgMdb, code: statusCode},
+      kioskStatus: {msg: msg, code: codeStatus},
     };
     setRefundMoneyStatus(true);
     let refund =
@@ -311,7 +303,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
     updateTransaction(postdata, 'cancel', action);
   };
 
-  const errorTransaction = async () => {
+  const errorTransaction = async (msg, codeStatus) => {
     MdbTurnOff();
     let postdata = {
       action: 'error',
@@ -322,7 +314,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
         changeMoney: 0,
       },
       transactionID: transaction.transactionID,
-      kioskStatus: {msg: msgMdb, code: statusCode},
+      kioskStatus: {msg: msg, code: codeStatus},
     };
     updateTransaction(postdata, 'cancel', 'error');
   };

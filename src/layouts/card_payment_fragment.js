@@ -98,8 +98,8 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
             setTimeout(async () => {
               await refundMoney(
                 'error',
-                callbackDispense.message,
-                callbackDispense.code,
+                'No VMC Event: selectionnumber',
+                '104001',
               );
             }, 3000);
           } else if (
@@ -111,11 +111,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
             setTimeout(async () => {
-              await refundMoney(
-                'error',
-                callbackDispense.message,
-                callbackDispense.code,
-              );
+              await refundMoney('error', 'selection pause', '50204');
             }, 3000);
           } else if (
             !callbackDispense.result &&
@@ -138,11 +134,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
             setTimeout(async () => {
-              await refundMoney(
-                'error',
-                callbackDispense.message,
-                callbackDispense.code,
-              );
+              await refundMoney('error', 'Elevator error', '50207');
             }, 3000);
           } else {
             if (!callbackDispense.result) {
@@ -151,11 +143,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
               setDispenseError(true);
               setMsgError(ERR.msgError(callbackDispense.code));
               setTimeout(async () => {
-                await refundMoney(
-                  'error',
-                  callbackDispense.message,
-                  callbackDispense.code,
-                );
+                await refundMoney('error', 'Process Error .', '9999');
               }, 3000);
             } else {
               setVendingStatus('Process Error .');
@@ -164,7 +152,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
               setMsgError('เกิดข้อผิดพลาดในการทำรายการ .');
               setStatusCode('9999');
               setMsgMdb('Process Error .');
-              errorTransaction();
+              errorTransaction('Process Error .', '9999');
             }
           }
         }
@@ -276,7 +264,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
     maincontroll.off('receivemoney');
   };
 
-  const refundMoney = async action => {
+  const refundMoney = async (action, msg, codeStatus) => {
     MdbTurnOff();
     let postdata = {
       action: action,
@@ -287,7 +275,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
         changeMoney: 0,
       },
       transactionID: transaction.transactionID,
-      kioskStatus: {msg: msgMdb, code: statusCode},
+      kioskStatus: {msg: msg, code: codeStatus},
     };
     setRefundMoneyStatus(true);
     let refund =

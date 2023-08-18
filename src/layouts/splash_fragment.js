@@ -34,7 +34,7 @@ export default function Splash() {
         temperature: temperature,
         ping: pingMS,
       };
-      console.log('checkin:::', ClientData);
+      console.log('checkin:::', payload);
       MQTTConnection.publicCheckin(ClientData, payload);
     }, 30000);
 

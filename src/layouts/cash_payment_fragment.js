@@ -76,7 +76,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
           maincontroll.off('dispense');
-          await refundMoney('error', res.message, res.code);
+          await refundMoney('error', 'selection doesn’t exist', '50203');
           break;
         case '50204':
           setVendingStatus(res.message);
@@ -86,7 +86,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
           maincontroll.off('dispense');
-          await refundMoney('error', res.message, res.code);
+          await refundMoney('error', 'selection pause', '50204');
           break;
         case '50410':
           setLoadDispense(true);
@@ -110,7 +110,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
           maincontroll.off('dispense');
-          await refundMoney('error', res.message, res.code);
+          await refundMoney('error', 'selection doesn’t exist', '50403');
           break;
         case '50205':
           setVendingStatus(res.message);
@@ -120,7 +120,11 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
           maincontroll.off('dispense');
-          await refundMoney('error', res.message, res.code);
+          await refundMoney(
+            'error',
+            'There is product inside elevator',
+            '50205',
+          );
           break;
         case '50207':
           setVendingStatus(res.message);
@@ -130,7 +134,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setStatusCode(String(res.code));
           setMsgMdb(res.message);
           maincontroll.off('dispense');
-          await refundMoney('cancel', '', '');
+          await refundMoney('error', 'Elevator error', '50207');
           break;
         default:
           break;
@@ -275,11 +279,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
         setStatusCode(String(callbackDispense.code));
         setMsgMdb(callbackDispense.message);
         setTimeout(async () => {
-          await refundMoney(
-            'error',
-            callbackDispense.message,
-            callbackDispense.code,
-          );
+          await refundMoney('error', 'No VMC Event: selectionnumber', '104001');
         }, 3000);
       } else if (
         !callbackDispense.result &&
@@ -292,11 +292,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
         setStatusCode(String(callbackDispense.code));
         setMsgMdb(callbackDispense.message);
         setTimeout(async () => {
-          await refundMoney(
-            'error',
-            callbackDispense.message,
-            callbackDispense.code,
-          );
+          await refundMoney('error', 'selection pause', '50204');
         }, 3000);
       } else if (
         !callbackDispense.result &&
@@ -321,11 +317,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
         setStatusCode(String(callbackDispense.code));
         setMsgMdb(callbackDispense.message);
         setTimeout(async () => {
-          await refundMoney(
-            'error',
-            callbackDispense.message,
-            callbackDispense.code,
-          );
+          await refundMoney('error', 'selection doesn’t exist', '50203');
         }, 3000);
       } else if (
         !callbackDispense.result &&
@@ -338,11 +330,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
         setStatusCode(String(callbackDispense.code));
         setMsgMdb(callbackDispense.message);
         setTimeout(async () => {
-          await refundMoney(
-            'error',
-            callbackDispense.message,
-            callbackDispense.code,
-          );
+          await refundMoney('error', 'Elevator error', '50207');
         }, 3000);
       } else {
         if (!callbackDispense.result) {
@@ -353,11 +341,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setStatusCode(callbackDispense.code);
           setMsgMdb(callbackDispense.message);
           setTimeout(async () => {
-            await refundMoney(
-              'error',
-              callbackDispense.message,
-              callbackDispense.code,
-            );
+            await refundMoney('error', 'Process Error .', '9999');
           }, 3000);
         } else {
           setVendingStatus('Process Error .');
@@ -366,7 +350,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
           setMsgError('เกิดข้อผิดพลาดในการทำรายการ .');
           setStatusCode('9999');
           setMsgMdb('Process Error .');
-          //errorTransaction();
+          errorTransaction('Process Error .', '9999');
         }
       }
     }
@@ -405,6 +389,22 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
       console.log('data update transaction', postdata);
       updateTransaction(postdata, 'cancel', action);
     }
+  };
+
+  const errorTransaction = async (msg, code) => {
+    MdbTurnOff();
+    let postdata = {
+      action: 'error',
+      payment: {
+        coinStack: {C1: 0, C2: 0, C5: 0, C10: 0},
+        type: 'Cash',
+        amount: moneyInput,
+        changeMoney: 0,
+      },
+      transactionID: transactionID,
+      kioskStatus: {msg: msg, code: code},
+    };
+    updateTransaction(postdata, 'cancel', 'error');
   };
 
   const closePayment = async () => {
