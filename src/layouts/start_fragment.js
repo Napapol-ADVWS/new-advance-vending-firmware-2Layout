@@ -75,7 +75,7 @@ export default function StartScreen() {
   const getKisokData = cb => {
     let checkKioskID = false;
     let checkRegisterKey = false;
-    STORE.getItem('KIOSKID', async res1 => {
+    STORE.getItem('KIOSKID',  res1 => {
       if (res1.result) {
         setIsLoading(10);
         optionsMqtt.kiosk = res1.data;
@@ -176,7 +176,7 @@ export default function StartScreen() {
       isDecodedToken,
       ClientData,
       cash_method,
-      async callback => {
+       callback => {
         console.log('MQTT callback::', callback);
         switch (callback.cmd) {
           case 'restart_app':
@@ -227,10 +227,10 @@ export default function StartScreen() {
             QRPaymentResult(callback.result);
             break;
           case 'clear_jammed':
-            const callbackJam = await maincontroll.clearselectionjammed(
+            maincontroll.clearselectionjammed(
               'clear',
-            );
-            console.log('clear jammed', callbackJam);
+            ); // No need to wait result
+            console.log('clear jammed');
             break;
           case 'close_cash_payment':
             console.log('APP CLOSE CASH');
