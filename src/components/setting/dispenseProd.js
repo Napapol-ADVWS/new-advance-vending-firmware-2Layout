@@ -42,7 +42,7 @@ const DispenseProd = () => {
   };
 
   const checkDispense = () => {
-    maincontroll.on('dispense', async res => {
+    maincontroll.on('dispense',  res => {
       logData += `log: ${JSON.stringify(res)}\n`;
       scrollToBottom();
       switch (res.code) {
@@ -55,12 +55,12 @@ const DispenseProd = () => {
             counter++;
             allAcitveSlot();
           } else {
-            await maincontroll.off('dispense');
+            maincontroll.off('dispense');
           }
           break;
         case '50204':
           setMsgVending(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           break;
         case '50410':
           setMsgVending(res.message);
@@ -73,11 +73,11 @@ const DispenseProd = () => {
           break;
         case '50403':
           setMsgVending(res.message);
-          await maincontroll.off('dispense');
+           maincontroll.off('dispense');
           break;
         case '50205':
           setMsgVending(res.message);
-          await maincontroll.off('dispense');
+           maincontroll.off('dispense');
           break;
         default:
           setMsgVending(res.message);
