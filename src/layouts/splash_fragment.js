@@ -33,12 +33,14 @@ export default function Splash() {
         Script.checkSignal(timeServer, setSignal);
       }
       setTimeServer(Date.now());
+      console.log('timeServer', timeServer);
       var payload = {
         coinStack: Script.getLastCoinStack(),
         boardStatus: true,
         mdbStatus: true,
         temperature: temperature,
         ping: timeServer,
+        testping: true,
       };
       console.log('checkin:::', payload);
       MQTTConnection.publicCheckin(ClientData, payload);

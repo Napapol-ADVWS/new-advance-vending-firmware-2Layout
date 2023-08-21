@@ -236,11 +236,16 @@ export default function StartScreen() {
             console.log('APP CLOSE CASH');
             cash_method(false);
             break;
-          case 'checkin_cb':
-            console.log('checkin_cb', callback);
+          case 'checkin-cb':
+            console.log('checkin-cb', callback);
             if (timeServerData > 0) {
               timeServer(Date.now() - timeServerData);
+              console.log('timeServerData1', timeServerData);
+            } else {
+              timeServer(callback.servertime);
+              console.log('timeServerData2', timeServerData);
             }
+            break;
         }
       },
     );
