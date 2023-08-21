@@ -6,33 +6,20 @@ const postJson = (path, postdata, cb) => {
   if (path !== 'register') {
     checkToken(token => {
       console.log(token);
-      let setFunction = eval(path);
-      setFunction(postdata, token.token, cb);
+      switch (path) {
+        case 'makeTransaction':
+          makeTransaction(postdata, token.token, cb);
+          break;
+        case 'updateTransaction':
+          updateTransaction(postdata, token.token, cb);
+          break;
+        default:
+          break;
+      }
     });
   } else {
-    let setFunction = eval(path);
-    setFunction(postdata, cb);
+    register(postdata, cb);
   }
-};
-
-const postJsonAwait = async (path, postdata) => {
-  let result = new Promise((resolve, reject) => {
-    if (path !== 'register') {
-      checkToken(token => {
-        console.log(token);
-        let setFunction = eval(path);
-        setFunction(postdata, token.token, r => {
-          resolve(r);
-        });
-      });
-    } else {
-      let setFunction = eval(path);
-      setFunction(postdata, result, r => {
-        resolve(r);
-      });
-    }
-  });
-  return result;
 };
 
 const checkToken = cb => {
@@ -191,6 +178,5 @@ export default {
   makeTransaction,
   updateTransaction,
   loginServiceMode,
-  postJsonAwait,
   checkIn,
 };

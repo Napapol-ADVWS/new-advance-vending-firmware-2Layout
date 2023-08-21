@@ -391,7 +391,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
     }
   };
 
-  const errorTransaction = async (msg, code) => {
+  const errorTransaction = (msg, code) => {
     MdbTurnOff();
     let postdata = {
       action: 'error',

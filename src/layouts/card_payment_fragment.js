@@ -287,7 +287,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
     updateTransaction(postdata, 'cancel', action);
   };
 
-  const errorTransaction = () => {
+  const errorTransaction = (msg, codeStatus) => {
     MdbTurnOff();
     let postdata = {
       action: 'error',
@@ -298,12 +298,12 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
         changeMoney: 0,
       },
       transactionID: transaction.transactionID,
-      kioskStatus: {msg: msgMdb, code: statusCode},
+      kioskStatus: {msg: msg, code: codeStatus},
     };
     updateTransaction(postdata, 'cancel', 'error');
   };
 
-  const closePayment = async () => {
+  const closePayment = () => {
     MdbTurnOff();
     setDisableCancel(true);
     let postdata = {

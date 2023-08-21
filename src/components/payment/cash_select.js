@@ -448,25 +448,25 @@ export default class cash extends React.Component {
         },
         transactionID: this.state.transactionID,
       };
-      //POST.postJson('updateTransaction', postdata, async callback => {
-      let callback = await POST.postJsonAwait('updateTransaction', postdata);
-      console.log('updateTransaction:', callback);
-      console.log('refund Amount', Number(this.state.inputValue));
-      if (Number(this.state.inputValue) > 0) {
-        const callbackChange = await maincontroll.givechange(
-          Number(this.state.inputValue),
-        );
-        console.log('dismiss refund', callbackChange);
-        await maincontroll.resetmoney();
-        if (callbackChange.result) {
-          this.closeDismiss();
+      POST.postJson('updateTransaction', postdata, async callback => {
+        //let callback = await POST.postJsonAwait('updateTransaction', postdata);
+        console.log('updateTransaction:', callback);
+        console.log('refund Amount', Number(this.state.inputValue));
+        if (Number(this.state.inputValue) > 0) {
+          const callbackChange = await maincontroll.givechange(
+            Number(this.state.inputValue),
+          );
+          console.log('dismiss refund', callbackChange);
+          await maincontroll.resetmoney();
+          if (callbackChange.result) {
+            this.closeDismiss();
+          } else {
+            this.closeDismiss();
+          }
         } else {
           this.closeDismiss();
         }
-      } else {
-        this.closeDismiss();
-      }
-      //});
+      });
     } else {
       this.closeDismiss();
     }

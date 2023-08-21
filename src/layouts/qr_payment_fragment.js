@@ -8,7 +8,6 @@ import {Styles} from '../styles/qr_style';
 import {BarIndicator} from 'react-native-indicators';
 import ERR from '../msgError';
 import moment from 'moment';
-import Script from '../script';
 
 const maincontroll = require('../../maincontroll');
 
@@ -17,7 +16,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
   const [LoadDispense, setLoadDispense] = React.useState(false);
   const [dispenseError, setDispenseError] = React.useState(false);
   const [msgError, setMsgError] = React.useState('กรุณารับเงินทอนจำนวน');
-  const [inputValue, setInputValue] = React.useState(0);
   const [timer, setTimer] = React.useState(transaction.qr.expireTimeSeconds);
   const [refundMoneyStatus, setRefundMoneyStatus] = React.useState(false);
   const [moneyRefund, setMoneyRefund] = React.useState(0);
@@ -258,7 +256,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
     });
   };
 
-  const onPaymentSuccess = async () => {
+  const onPaymentSuccess = () => {
     MdbTurnOff();
     let postdata = {
       action: 'complete',
@@ -303,7 +301,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
     updateTransaction(postdata, 'cancel', action);
   };
 
-  const errorTransaction = async (msg, codeStatus) => {
+  const errorTransaction = (msg, codeStatus) => {
     MdbTurnOff();
     let postdata = {
       action: 'error',
@@ -319,7 +317,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
     updateTransaction(postdata, 'cancel', 'error');
   };
 
-  const closePayment = async () => {
+  const closePayment = () => {
     MdbTurnOff();
     setDisableCancel(true);
     let postdata = {
