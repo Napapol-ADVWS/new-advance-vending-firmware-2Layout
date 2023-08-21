@@ -34,7 +34,7 @@ const checkToken = cb => {
   });
 };
 
-const MAINPOST = (url,postdata,token, cb) => {
+const MAINPOST = (url, postdata, token, cb) => {
   fetch(url, {
     method: 'POST',
     headers: {
@@ -55,29 +55,29 @@ const MAINPOST = (url,postdata,token, cb) => {
       cb(false);
       console.error(err);
     });
-}
+};
 const register = (postdata, cb) => {
-  MAINPOST(HOST + '/api/v1/kiosk/register',postdata,'',cb)
+  MAINPOST(HOST + '/api/v1/kiosk/register', postdata, '', cb);
 };
 
 const getProduct = (postdata, token, cb) => {
-    MAINPOST(HOST +  '/api/v1/get/product',postdata,token,cb)
+  MAINPOST(HOST + '/api/v1/get/product', postdata, token, cb);
 };
 
 const makeTransaction = (postdata, token, cb) => {
-    MAINPOST(HOST +  '/api/v1/kiosk/transaction',postdata,token,cb)
+  MAINPOST(HOST + '/api/v1/kiosk/transaction', postdata, token, cb);
 };
 
 const updateTransaction = (postdata, token, cb) => {
-  MAINPOST(HOST +  '/api/v1/kiosk/transactionsuccess',postdata,token,cb)
+  MAINPOST(HOST + '/api/v1/kiosk/transactionsuccess', postdata, token, cb);
 };
 
 const loginServiceMode = (postdata, token, cb) => {
-  MAINPOST(HOST +  '/api/v1/kiosk/service/pin',postdata,token,cb)
+  MAINPOST(HOST + '/api/v1/kiosk/service/pin', postdata, token, cb);
 };
 
 const checkIn = (postdata, cb) => {
-    MAINPOST(HOST +   '/api/v1/kiosk/checkin',postdata,'',cb)
+  MAINPOST(HOST + '/api/v1/kiosk/checkin', postdata, '', cb);
 };
 
 export default {

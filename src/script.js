@@ -53,29 +53,18 @@ const checkInRecheck = ClientData => {
   MQTTConnection.publicCheckin(ClientData);
 };
 
-const checkSignal = (setSignal, setPingMS) => {
-  let start = Date.now();
-  fetch('https://www.advancevending.net/')
-    .then(response => {
-      if (response) {
-        const pingMS = Date.now() - start;
-        setPingMS(pingMS);
-        if (pingMS >= 0.0 && pingMS <= 250.99) {
-          setSignal(4);
-        } else if (pingMS >= 100.0 && pingMS <= 299.99) {
-          setSignal(3);
-        } else if (pingMS >= 300.0 && pingMS <= 599.99) {
-          setSignal(2);
-        } else if (pingMS >= 600.0 && pingMS <= 1999.99) {
-          setSignal(1);
-        } else {
-          setSignal(0);
-        }
-      }
-    })
-    .catch(error => {
-      console.log(error);
-    });
+const checkSignal = (serverTime, setSignal) => {
+  if (serverTime >= 0.0 && serverTime <= 250.99) {
+    setSignal(4);
+  } else if (serverTime >= 100.0 && serverTime <= 299.99) {
+    setSignal(3);
+  } else if (serverTime >= 300.0 && serverTime <= 599.99) {
+    setSignal(2);
+  } else if (serverTime >= 600.0 && serverTime <= 1999.99) {
+    setSignal(1);
+  } else {
+    setSignal(0);
+  }
 };
 
 const vendingStatus = (productInsideElevator, pickupDoor, temperature) => {

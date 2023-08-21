@@ -45,12 +45,14 @@ export default function StartScreen() {
   const productInsideElevator = useSetRecoilState(GLOBAL.productInsideElevator);
   const pickupDoor = useSetRecoilState(GLOBAL.pickupDoor);
   const temperature = useSetRecoilState(GLOBAL.temperature);
+  const timeServer = useSetRecoilState(GLOBAL.timeServer);
+  const [timeServerData] = useRecoilState(GLOBAL.timeServer);
 
   React.useEffect(() => {
     runApp();
   }, []);
 
-  const runApp =  () => {
+  const runApp = () => {
     Script.vendingStatus(productInsideElevator, pickupDoor, temperature);
     getKisokData(res => {
       console.log('START:::', res);
@@ -75,7 +77,7 @@ export default function StartScreen() {
   const getKisokData = cb => {
     let checkKioskID = false;
     let checkRegisterKey = false;
-    STORE.getItem('KIOSKID',  res1 => {
+    STORE.getItem('KIOSKID', res1 => {
       if (res1.result) {
         setIsLoading(10);
         optionsMqtt.kiosk = res1.data;
@@ -176,7 +178,7 @@ export default function StartScreen() {
       isDecodedToken,
       ClientData,
       cash_method,
-       callback => {
+      callback => {
         console.log('MQTT callback::', callback);
         switch (callback.cmd) {
           case 'restart_app':
@@ -227,15 +229,18 @@ export default function StartScreen() {
             QRPaymentResult(callback.result);
             break;
           case 'clear_jammed':
-            maincontroll.clearselectionjammed(
-              'clear',
-            ); // No need to wait result
+            maincontroll.clearselectionjammed('clear'); // No need to wait result
             console.log('clear jammed');
             break;
           case 'close_cash_payment':
             console.log('APP CLOSE CASH');
             cash_method(false);
             break;
+          case 'checkin_cb':
+            console.log('checkin_cb', callback);
+            if (timeServerData > 0) {
+              timeServer(Date.now() - timeServerData);
+            }
         }
       },
     );

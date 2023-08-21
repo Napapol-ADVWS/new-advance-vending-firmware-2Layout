@@ -191,3 +191,8 @@ export const pingMS = atom({
   key: 'pingMS',
   default: 0,
 });
+
+export const timeServer = atom({
+  key: 'timeServer',
+  default: 0,
+});

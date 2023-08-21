@@ -23,16 +23,22 @@ export default function Splash() {
   const setSignal = useSetRecoilState(GLOBAL.signals);
   const setPingMS = useSetRecoilState(GLOBAL.pingMS);
   const [pingMS] = useRecoilState(GLOBAL.pingMS);
+  const [timeServer] = useRecoilState(GLOBAL.timeServer);
+  const setTimeServer = useSetRecoilState(GLOBAL.timeServer);
 
   React.useEffect(() => {
     checkInMQTT = setInterval(() => {
-      Script.checkSignal(setSignal, setPingMS);
+      //Script.checkSignal(setSignal, setPingMS);
+      if (timeServer > 0) {
+        Script.checkSignal(timeServer, setSignal);
+      }
+      setTimeServer(Date.now());
       var payload = {
         coinStack: Script.getLastCoinStack(),
         boardStatus: true,
         mdbStatus: true,
         temperature: temperature,
-        ping: pingMS,
+        ping: timeServer,
       };
       console.log('checkin:::', payload);
       MQTTConnection.publicCheckin(ClientData, payload);
@@ -56,7 +62,7 @@ export default function Splash() {
     }),
   ).start();
 
-  const onclickScreen =  () => {
+  const onclickScreen = () => {
     navigate.navigate('Shelf');
   };
 
