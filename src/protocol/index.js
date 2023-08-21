@@ -34,16 +34,16 @@ const checkToken = cb => {
   });
 };
 
-const register = (postdata, cb) => {
-  const url = HOST + '/api/v1/kiosk/register';
+const MAINPOST = (url,postdata,token, cb) => {
   fetch(url, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      //Authorization: 'Bearer ' + token,
+      Authorization: 'Bearer ' + token,
     },
     body: JSON.stringify(postdata),
+    timeout: 3000,
   })
     .then(response => {
       return response.json();
@@ -55,120 +55,29 @@ const register = (postdata, cb) => {
       cb(false);
       console.error(err);
     });
+}
+const register = (postdata, cb) => {
+  MAINPOST(HOST + '/api/v1/kiosk/register',postdata,'',cb)
 };
 
 const getProduct = (postdata, token, cb) => {
-  const url = HOST + '/api/v1/get/product';
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token,
-    },
-    body: JSON.stringify(postdata),
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      cb(data);
-    })
-    .catch(err => {
-      cb(false);
-      console.error(err);
-    });
+    MAINPOST(HOST +  '/api/v1/get/product',postdata,token,cb)
 };
 
 const makeTransaction = (postdata, token, cb) => {
-  const url = HOST + '/api/v1/kiosk/transaction';
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token,
-    },
-    body: JSON.stringify(postdata),
-    timeout: 2000,
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      cb(data);
-    })
-    .catch(err => {
-      cb(false);
-      console.error(err);
-    });
+    MAINPOST(HOST +  '/api/v1/kiosk/transaction',postdata,token,cb)
 };
 
 const updateTransaction = (postdata, token, cb) => {
-  const url = HOST + '/api/v1/kiosk/transactionsuccess';
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token,
-    },
-    body: JSON.stringify(postdata),
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      cb(data);
-    })
-    .catch(err => {
-      cb(false);
-      console.error(err);
-    });
+  MAINPOST(HOST +  '/api/v1/kiosk/transactionsuccess',postdata,token,cb)
 };
 
 const loginServiceMode = (postdata, token, cb) => {
-  const url = HOST + '/api/v1/kiosk/service/pin';
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token,
-    },
-    body: JSON.stringify(postdata),
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      cb(data);
-    })
-    .catch(err => {
-      cb(false);
-      console.error(err);
-    });
+  MAINPOST(HOST +  '/api/v1/kiosk/service/pin',postdata,token,cb)
 };
 
 const checkIn = (postdata, cb) => {
-  fetch(HOST + '/api/v1/kiosk/checkin', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(postdata),
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      cb(data);
-    })
-    .catch(err => {
-      cb(false);
-      console.error(err);
-    });
+    MAINPOST(HOST +   '/api/v1/kiosk/checkin',postdata,'',cb)
 };
 
 export default {

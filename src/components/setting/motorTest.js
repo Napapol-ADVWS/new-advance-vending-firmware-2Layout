@@ -7,7 +7,7 @@ const Motortest = () => {
   const [slot, setSlot] = React.useState(1);
   const [selectSlot, setSelectSlot] = React.useState(0);
 
-  const testMotor = async () => {
+  const testMotor =  () => {
     maincontroll.selectiontest(Number(selectSlot), res => {
       console.log(slot, 'SLOT RESULT', res);
     });

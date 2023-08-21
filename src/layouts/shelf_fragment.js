@@ -102,7 +102,7 @@ export default function Shelf() {
     }, 100);
   };
 
-  const selectProd = async item => {
+  const selectProd =  item => {
     if (productInsideElevator === 'no') {
       setProd(item);
       setOnSelect(true);

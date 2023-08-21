@@ -101,8 +101,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setMsgError(ERR.msgError(callbackDispense.code));
             setStatusCode(callbackDispense.code);
             setMsgMdb(callbackDispense.message);
-            setTimeout(async () => {
-              await refundMoney(
+            setTimeout( () => {
+               refundMoney(
                 'error',
                 'No VMC Event: selectionnumber',
                 '104001',
@@ -118,8 +118,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setMsgError(ERR.msgError(callbackDispense.code));
             setStatusCode(callbackDispense.code);
             setMsgMdb(callbackDispense.message);
-            setTimeout(async () => {
-              await refundMoney('error', 'selection pause', '50204');
+            setTimeout( () => {
+               refundMoney('error', 'selection pause', '50204');
             }, 3000);
           } else if (
             !callbackDispense.result &&
@@ -143,8 +143,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setMsgError(ERR.msgError(callbackDispense.code));
             setStatusCode(callbackDispense.code);
             setMsgMdb(callbackDispense.message);
-            setTimeout(async () => {
-              await refundMoney('error', 'Elevator error', '50207');
+            setTimeout( () => {
+               refundMoney('error', 'Elevator error', '50207');
             }, 3000);
           } else {
             if (!callbackDispense.result) {
@@ -154,8 +154,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
               setMsgError(ERR.msgError(callbackDispense.code));
               setStatusCode(callbackDispense.code);
               setMsgMdb(callbackDispense.message);
-              setTimeout(async () => {
-                await refundMoney('error', 'Process Error .', '9999');
+              setTimeout( () => {
+                 refundMoney('error', 'Process Error .', '9999');
               }, 3000);
             } else {
               setVendingStatus('Process Error .');

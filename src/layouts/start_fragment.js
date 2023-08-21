@@ -50,7 +50,7 @@ export default function StartScreen() {
     runApp();
   }, []);
 
-  const runApp = async () => {
+  const runApp =  () => {
     Script.vendingStatus(productInsideElevator, pickupDoor, temperature);
     getKisokData(res => {
       console.log('START:::', res);

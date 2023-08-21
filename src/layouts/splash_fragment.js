@@ -56,7 +56,7 @@ export default function Splash() {
     }),
   ).start();
 
-  const onclickScreen = async () => {
+  const onclickScreen =  () => {
     navigate.navigate('Shelf');
   };
 

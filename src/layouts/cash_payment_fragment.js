@@ -170,7 +170,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
         } catch (error) {
           maincontroll.clearwait();
           dispenseStatus();
-          await dispenseProduct();
+          //await dispenseProduct();   Do something else
         }
       }
     });

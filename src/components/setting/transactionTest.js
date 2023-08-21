@@ -14,11 +14,11 @@ const TransactionTest = ({dismissModal}) => {
 
   const onSetMoney = async () => {
     const callbackCoin = await maincontroll.setcoinaccept(true);
-    await maincontroll.delay2();
+    //await maincontroll.delay2();
     const callbackBill = await maincontroll.setbillaccept(true);
     console.log('callbackCoin:', callbackCoin);
     console.log('callbackBill:', callbackBill);
-    await maincontroll.delay2();
+    //await maincontroll.delay2();
     dispenseStatus();
     setMsgVending('Ready');
     maincontroll.on('receivemoney', async res => {
@@ -32,12 +32,10 @@ const TransactionTest = ({dismissModal}) => {
         // changeMoney(change);
         MdbTurnOff();
         const callbackCoin2 = await maincontroll.setcoinaccept(false);
-        await maincontroll.delay2();
         const callbackBill2 = await maincontroll.setbillaccept(false);
-        await maincontroll.delay2();
         console.log('callbackCoin:', callbackCoin2);
         console.log('callbackBill:', callbackBill2);
-        await maincontroll.clearwait();
+        maincontroll.clearwait();
         await dispenseProduct();
       }
     });
@@ -87,7 +85,7 @@ const TransactionTest = ({dismissModal}) => {
   };
 
   const dispenseStatus = () => {
-    maincontroll.on('dispense', async res => {
+    maincontroll.on('dispense',  res => {
       console.log('dispense status:', res);
       switch (res.code) {
         case '50401':
@@ -95,12 +93,12 @@ const TransactionTest = ({dismissModal}) => {
           break;
         case '50402':
           setMsgVending(res.message);
-          await maincontroll.off('dispense');
+          maincontroll.off('dispense');
           changeMoney();
           break;
         case '50204':
           setMsgVending(res.message);
-          await maincontroll.off('dispense');
+           maincontroll.off('dispense');
           refundMoney();
           break;
         case '50410':
@@ -114,12 +112,12 @@ const TransactionTest = ({dismissModal}) => {
           break;
         case '50403':
           setMsgVending(res.message);
-          await maincontroll.off('dispense');
+           maincontroll.off('dispense');
           refundMoney();
           break;
         case '50205':
           setMsgVending(res.message);
-          await maincontroll.off('dispense');
+           maincontroll.off('dispense');
           refundMoney();
           break;
         default:

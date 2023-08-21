@@ -10,12 +10,12 @@ const GiveChange = () => {
 
   const onSetMoney = async () => {
     const callbackCoin = await maincontroll.setcoinaccept(true);
-    await maincontroll.delay2();
+    //await maincontroll.delay2();
     const callbackBill = await maincontroll.setbillaccept(true);
     console.log('callbackCoin:', callbackCoin);
     console.log('callbackBill:', callbackBill);
     setOpenInput(true);
-    await maincontroll.delay2();
+    //await maincontroll.delay2();
     maincontroll.on('receivemoney', res => {
       console.log('AMOUNT:::::', res);
       inputMoney += Number(res.amount);
@@ -32,11 +32,11 @@ const GiveChange = () => {
   const changeMoney = async m => {
     console.log('changeMoney::', m);
     const callbackCoin = await maincontroll.setcoinaccept(false);
-    await maincontroll.delay2();
+    //await maincontroll.delay2();
     const callbackBill = await maincontroll.setbillaccept(false);
     console.log('callbackCoin:', callbackCoin);
     console.log('callbackBill:', callbackBill);
-    await maincontroll.delay2();
+    //await maincontroll.delay2();
     await maincontroll.givechange(Number(m), res => {
       console.log('givechange res =>', res);
       setOpenInput(false);
