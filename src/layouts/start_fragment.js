@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import * as RN from 'react-native';
 import * as navigate from '../navigator/RootNavigation';
@@ -13,40 +14,23 @@ import Script from '../script';
 import {Styles} from '../styles/splash_style';
 import LinearGradient from 'react-native-linear-gradient';
 import Signal from '../components/shelf/Signal';
+import G from '../globalVar';
 
 const maincontroll = require('../../maincontroll');
 let optionsMqtt = {};
 let onlyfirsttime = false;
 export default function StartScreen() {
-  const [isReady, setIsReady] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(0);
   const [isInventory] = useRecoilState(GLOBAL.inventory);
   const [isPaymentMethod] = useRecoilState(GLOBAL.payment_method);
-  const [isDecodedToken] = useRecoilState(GLOBAL.decodeToken);
-  const [ClientData] = useRecoilState(GLOBAL.mqttClient);
-  const onSetKioskID = useSetRecoilState(GLOBAL.KIOSKID);
-  const onSetRegisterKey = useSetRecoilState(GLOBAL.REGISTERKEY);
-  const onSetToken = useSetRecoilState(GLOBAL.TOKEN);
-  const onSetOwner = useSetRecoilState(GLOBAL.OWNER);
-  const onSetPublish = useSetRecoilState(GLOBAL.PUBLISH);
-  const mqttClient = useSetRecoilState(GLOBAL.mqttClient);
-  const onSetSubscribe = useSetRecoilState(GLOBAL.SUBSCRIBE);
-  const topicCheckIn = useSetRecoilState(GLOBAL.topicCheckIn);
-  const topicApiCmd = useSetRecoilState(GLOBAL.topicApiCmd);
-  const topicCron = useSetRecoilState(GLOBAL.topicCron);
   const inventory = useSetRecoilState(GLOBAL.inventory);
   const payment_method = useSetRecoilState(GLOBAL.payment_method);
   const cash_method = useSetRecoilState(GLOBAL.cash_method);
   const category = useSetRecoilState(GLOBAL.category);
-  const QRPaymentResult = useSetRecoilState(GLOBAL.QRPaymentResult);
   const inventoryAll = useSetRecoilState(GLOBAL.inventoryAll);
-  const setSignal = useSetRecoilState(GLOBAL.signals);
-  const setDecodeToken = useSetRecoilState(GLOBAL.decodeToken);
   const productInsideElevator = useSetRecoilState(GLOBAL.productInsideElevator);
   const pickupDoor = useSetRecoilState(GLOBAL.pickupDoor);
   const temperature = useSetRecoilState(GLOBAL.temperature);
-  const timeServer = useSetRecoilState(GLOBAL.timeServer);
-  const [timeServerData] = useRecoilState(GLOBAL.timeServer);
 
   React.useEffect(() => {
     runApp();
@@ -64,7 +48,6 @@ export default function StartScreen() {
         } else {
           console.log('isInventory:', isInventory);
           console.log('isPaymentMethod:', isPaymentMethod);
-          setIsReady(true);
           setIsLoading(100);
         }
       } else {
@@ -81,14 +64,14 @@ export default function StartScreen() {
       if (res1.result) {
         setIsLoading(10);
         optionsMqtt.kiosk = res1.data;
-        onSetKioskID(res1.data);
+        G.KIOSKID = res1.data;
         checkKioskID = true;
       }
       STORE.getItem('REGISTERKEY', res2 => {
         if (res2.result) {
           setIsLoading(20);
           optionsMqtt.registerKey = res2.data;
-          onSetRegisterKey(res2.data);
+          G.REGISTERKEY = res2.data;
           checkRegisterKey = true;
         }
         if (checkKioskID && checkRegisterKey) {
@@ -115,11 +98,11 @@ export default function StartScreen() {
         optionsMqtt.token = tokendata;
         optionsMqtt.publish = decodedToken.publish;
         optionsMqtt.subscribe = decodedToken.subscribe;
-        onSetToken(tokendata);
-        onSetOwner(decodedToken.owner);
-        onSetPublish(decodedToken.publish);
-        onSetSubscribe(decodedToken.subscribe);
-        setDecodeToken(decodedToken);
+        G.TOKEN = tokendata;
+        G.OWNER = decodedToken.owner;
+        G.PUBLISH = decodedToken.publish;
+        G.SUBSCRIBE = decodedToken.subscribe;
+        G.decodeToken = decodedToken;
         connectMQTT(tokendata);
         console.log('decode::::', decodedToken);
       }
@@ -139,10 +122,10 @@ export default function StartScreen() {
         optionsMqtt.publish = callback.data.publish;
         optionsMqtt.subscribe = callback.data.subscribe;
         thisSetToken(callback.data.token);
-        onSetOwner(callback.data.owner);
-        onSetPublish(callback.data.publish);
-        onSetSubscribe(callback.data.subscribe);
-        setDecodeToken(callback.data);
+        G.OWNER = callback.data.owner;
+        G.PUBLISH = callback.data.publish;
+        G.SUBSCRIBE = callback.data.subscribe;
+        G.decodeToken = callback.data;
         connectMQTT(callback.data.token);
       }
     });
@@ -152,7 +135,7 @@ export default function StartScreen() {
     setIsLoading(60);
     STORE.setItem('TOKEN', token, response => {
       if (response.result) {
-        onSetToken(response.data);
+        G.TOKEN = response.data;
       }
     });
   };
@@ -167,23 +150,12 @@ export default function StartScreen() {
       String(optionsMqtt.kiosk),
       optionsMqtt.subscribe,
       optionsMqtt.publish,
-      topicCheckIn,
-      topicApiCmd,
-      topicCron,
-      mqttClient,
-      QRPaymentResult,
-      category,
-      inventory,
-      inventoryAll,
-      isDecodedToken,
-      ClientData,
-      cash_method,
       callback => {
         console.log('MQTT callback::', callback);
         switch (callback.cmd) {
           case 'restart_app':
             console.log('restart', typeof callback);
-            let payload = isDecodedToken;
+            let payload = G.decodeToken;
             let objData = JSON.stringify(callback.data);
             payload.payload = {cronID: objData.cronID};
             // publicCron(ClientData, payload, result => {
@@ -205,8 +177,6 @@ export default function StartScreen() {
               arrayCategory = arrayCategory.concat(callback.category);
             }
             category(arrayCategory);
-            setIsReady(true);
-            //Script.checkInV2();
             onlyfirsttime = true;
             setIsLoading(100);
             break;
@@ -226,7 +196,7 @@ export default function StartScreen() {
             break;
           case 'qr_payment_result':
             console.log('SAVE QR RESULT');
-            QRPaymentResult(callback.result);
+            G.QRPaymentResult = callback.result;
             break;
           case 'clear_jammed':
             maincontroll.clearselectionjammed('clear'); // No need to wait result
@@ -237,13 +207,11 @@ export default function StartScreen() {
             cash_method(false);
             break;
           case 'checkin-cb':
-            console.log('checkin-cb', callback);
-            if (timeServerData > 0) {
-              timeServer(Date.now() - timeServerData);
-              console.log('timeServerData1', timeServerData);
+            if (G.startServerData > 0) {
+              let pingData = Date.now() - G.startServerData;
+              G.pingMS = pingData;
             } else {
-              timeServer(callback.servertime);
-              console.log('timeServerData2', timeServerData);
+              G.pingMS = Date.now();
             }
             break;
         }

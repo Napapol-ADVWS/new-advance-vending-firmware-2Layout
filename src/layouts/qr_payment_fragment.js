@@ -2,12 +2,11 @@
 import * as React from 'react';
 import * as RN from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {useRecoilState} from 'recoil';
-import * as GOLBAL from '../globalState';
 import {Styles} from '../styles/qr_style';
 import {BarIndicator} from 'react-native-indicators';
 import ERR from '../msgError';
 import moment from 'moment';
+import G from '../globalVar';
 
 const maincontroll = require('../../maincontroll');
 
@@ -25,12 +24,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
   const [QrPayment, setQrPayment] = React.useState('data:image/png;base64,');
   const [startSuccess, setStartSucess] = React.useState(false);
   const [PaymentSuccess, setPaymentSuccess] = React.useState(false);
-  const [statusCode, setStatusCode] = React.useState('');
-  const [msgMdb, setMsgMdb] = React.useState('');
-  const [turnOff, setTurnOff] = React.useState(false);
-
-  const [QRPaymentResult] = useRecoilState(GOLBAL.QRPaymentResult);
-  const [paymentReady] = useRecoilState(GOLBAL.paymentReady);
 
   let moneyInput = {coin: 0, bill: 0, total: 0};
   let firstload = false;
@@ -68,10 +61,10 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
   };
 
   const checkInputQRPayment = async () => {
-    if (QRPaymentResult.status === 'success' && paymentReady) {
+    if (G.QRPaymentResult.status === 'success' && G.paymentReady) {
       dispenseStatus();
       if (!PaymentSuccess) {
-        console.log('PaymentSuccess::', QRPaymentResult);
+        console.log('PaymentSuccess::', G.QRPaymentResult);
         clearTimeout(time_counter);
         setPaymentSuccess(true);
         setDisableCancel(true);
@@ -99,14 +92,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            setStatusCode(callbackDispense.code);
-            setMsgMdb(callbackDispense.message);
-            setTimeout( () => {
-               refundMoney(
-                'error',
-                'No VMC Event: selectionnumber',
-                '104001',
-              );
+            setTimeout(() => {
+              refundMoney('error', 'No VMC Event: selectionnumber', '104001');
             }, 3000);
           } else if (
             !callbackDispense.result &&
@@ -116,10 +103,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            setStatusCode(callbackDispense.code);
-            setMsgMdb(callbackDispense.message);
-            setTimeout( () => {
-               refundMoney('error', 'selection pause', '50204');
+            setTimeout(() => {
+              refundMoney('error', 'selection pause', '50204');
             }, 3000);
           } else if (
             !callbackDispense.result &&
@@ -141,10 +126,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            setStatusCode(callbackDispense.code);
-            setMsgMdb(callbackDispense.message);
-            setTimeout( () => {
-               refundMoney('error', 'Elevator error', '50207');
+            setTimeout(() => {
+              refundMoney('error', 'Elevator error', '50207');
             }, 3000);
           } else {
             if (!callbackDispense.result) {
@@ -152,18 +135,14 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
               setLoadDispense(true);
               setDispenseError(true);
               setMsgError(ERR.msgError(callbackDispense.code));
-              setStatusCode(callbackDispense.code);
-              setMsgMdb(callbackDispense.message);
-              setTimeout( () => {
-                 refundMoney('error', 'Process Error .', '9999');
+              setTimeout(() => {
+                refundMoney('error', 'Process Error .', '9999');
               }, 3000);
             } else {
               setVendingStatus('Process Error .');
               setLoadDispense(true);
               setDispenseError(true);
               setMsgError('เกิดข้อผิดพลาดในการทำรายการ .');
-              setStatusCode('9999');
-              setMsgMdb('Process Error .');
               errorTransaction('Process Error .', '9999');
             }
           }
@@ -182,7 +161,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
         case '50402':
           setVendingStatus(res.message);
           maincontroll.off('dispense');
-          setTurnOff(true);
           setTimeout(() => {
             onPaymentSuccess();
           }, 3000);
@@ -192,8 +170,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setLoadDispense(true);
           setDispenseError(true);
           setMsgError(ERR.msgError(res.code));
-          setStatusCode(String(res.code));
-          setMsgMdb(res.message);
           maincontroll.off('dispense');
           await refundMoney('error', 'selection doesn’t exist', '50203');
           break;
@@ -202,8 +178,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setDispenseError(true);
           setLoadDispense(true);
           setMsgError(ERR.msgError(res.code));
-          setStatusCode(res.code);
-          setMsgMdb(res.message);
           maincontroll.off('dispense');
           await refundMoney('error', 'selection pause', '50204');
           break;
@@ -227,8 +201,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setLoadDispense(true);
           setDispenseError(true);
           setMsgError(ERR.msgError(res.code));
-          setStatusCode(res.code);
-          setMsgMdb(res.message);
           maincontroll.off('dispense');
           await refundMoney('error', 'selection doesn’t exist', '50403');
           break;
@@ -245,8 +217,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setDispenseError(true);
           setLoadDispense(true);
           setMsgError(ERR.msgError(res.code));
-          setStatusCode(res.code);
-          setMsgMdb(res.message);
           maincontroll.off('dispense');
           await refundMoney('error', 'Elevator error', '50207');
           break;

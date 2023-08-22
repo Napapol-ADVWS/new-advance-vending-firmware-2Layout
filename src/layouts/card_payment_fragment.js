@@ -2,12 +2,11 @@
 import * as React from 'react';
 import * as RN from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {useRecoilState} from 'recoil';
-import * as GOLBAL from '../globalState';
 import {Styles} from '../styles/qr_style';
 import {BarIndicator} from 'react-native-indicators';
 import ERR from '../msgError';
 import moment from 'moment';
+import G from '../globalVar';
 
 const maincontroll = require('../../maincontroll');
 let dispenseTimeout = 0;
@@ -24,11 +23,6 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
   const [QrPayment, setQrPayment] = React.useState('data:image/png;base64,');
   const [startSuccess, setStartSucess] = React.useState(false);
   const [PaymentSuccess, setPaymentSuccess] = React.useState(false);
-  const [statusCode, setStatusCode] = React.useState('');
-  const [msgMdb, setMsgMdb] = React.useState('');
-
-  const [QRPaymentResult] = useRecoilState(GOLBAL.QRPaymentResult);
-  const [paymentReady] = useRecoilState(GOLBAL.paymentReady);
 
   let moneyInput = {coin: 0, bill: 0, total: 0};
   let firstload = false;
@@ -65,11 +59,11 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
   };
 
   const checkInputQRPayment = async () => {
-    if (QRPaymentResult.status === 'success' && paymentReady) {
+    if (G.QRPaymentResult.status === 'success' && G.paymentReady) {
       dispenseStatus();
       clearTimeout(time_counter);
       if (!PaymentSuccess) {
-        console.log('PaymentSuccess::', QRPaymentResult);
+        console.log('PaymentSuccess::', G.QRPaymentResult);
         setPaymentSuccess(true);
         setDisableCancel(true);
         var callbackDispense = false;
@@ -150,8 +144,6 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
               setLoadDispense(true);
               setDispenseError(true);
               setMsgError('เกิดข้อผิดพลาดในการทำรายการ .');
-              setStatusCode('9999');
-              setMsgMdb('Process Error .');
               errorTransaction('Process Error .', '9999');
             }
           }
@@ -179,8 +171,6 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
           setLoadDispense(true);
           setDispenseError(true);
           setMsgError(ERR.msgError(res.code));
-          setStatusCode(String(res.code));
-          setMsgMdb(res.message);
           maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
@@ -189,8 +179,6 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
           setLoadDispense(true);
           setDispenseError(true);
           setMsgError(ERR.msgError(res.code));
-          setStatusCode(res.code);
-          setMsgMdb(res.message);
           maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
@@ -214,8 +202,6 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
           setLoadDispense(true);
           setDispenseError(true);
           setMsgError(ERR.msgError(res.code));
-          setStatusCode(res.code);
-          setMsgMdb(res.message);
           maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);
           break;
@@ -231,8 +217,6 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
           setVendingStatus(res.message);
           setDispenseError(true);
           setLoadDispense(true);
-          setStatusCode(res.code);
-          setMsgMdb(res.message);
           setMsgError(ERR.msgError(res.code));
           maincontroll.off('dispense');
           await refundMoney('error', res.message, res.code);

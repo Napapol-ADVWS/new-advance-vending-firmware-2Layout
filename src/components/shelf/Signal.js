@@ -9,7 +9,7 @@ import images from '../../../assets/images';
 
 const signalDisplay = () => {
   const [signal] = useRecoilState(GOLBAL.signals);
-  const [signalImage, setSignalImage] = React.useState([
+  const [signalImage] = React.useState([
     {image: images.lv0, seq: 0},
     {image: images.lv1, seq: 1},
     {image: images.lv2, seq: 2},

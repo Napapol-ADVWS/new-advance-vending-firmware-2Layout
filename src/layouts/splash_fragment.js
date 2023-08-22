@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import {Animated} from 'react-native';
 import * as RN from 'react-native';
@@ -10,6 +11,8 @@ import Signal from '../components/shelf/Signal';
 import AdsVideo from '../components/splash/ads_video';
 import Script from '../script';
 import MQTTConnection from '../MQTTConnection';
+import G from '../globalVar';
+
 var checkInMQTT = false;
 export default function Splash() {
   const width = new Animated.Value(250);
@@ -17,33 +20,22 @@ export default function Splash() {
   const [onAds, setOnAds] = useRecoilState(GLOBAL.ads);
   const [isVideo, setIsVideo] = React.useState('');
   const [isVideoReady, setIsVideoReady] = React.useState(false);
-  const setVendingReady = useSetRecoilState(GLOBAL.vendingReady);
-  const [ClientData] = useRecoilState(GLOBAL.mqttClient);
-  const [temperature] = useRecoilState(GLOBAL.temperature);
   const setSignal = useSetRecoilState(GLOBAL.signals);
-  const setPingMS = useSetRecoilState(GLOBAL.pingMS);
-  const [pingMS] = useRecoilState(GLOBAL.pingMS);
-  const [timeServer] = useRecoilState(GLOBAL.timeServer);
-  const setTimeServer = useSetRecoilState(GLOBAL.timeServer);
 
   React.useEffect(() => {
     checkInMQTT = setInterval(() => {
-      //Script.checkSignal(setSignal, setPingMS);
-      if (timeServer > 0) {
-        Script.checkSignal(timeServer, setSignal);
-      }
-      setTimeServer(Date.now());
-      console.log('timeServer', timeServer);
+      G.startServerData = Date.now();
+      Script.checkSignal(G.pingMS, setSignal);
       var payload = {
         coinStack: Script.getLastCoinStack(),
         boardStatus: true,
         mdbStatus: true,
-        temperature: temperature,
-        ping: timeServer,
+        temperature: G.temperature,
+        ping: G.pingMS,
         testping: true,
       };
       console.log('checkin:::', payload);
-      MQTTConnection.publicCheckin(ClientData, payload);
+      MQTTConnection.publicCheckin(G.mqttClient, payload);
     }, 30000);
 
     return () => {

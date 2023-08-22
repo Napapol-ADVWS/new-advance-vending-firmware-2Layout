@@ -4,6 +4,7 @@ import STORE from './storage';
 import jwt_decode from 'jwt-decode';
 import POST from './protocol';
 import Script from './script';
+import G from './globalVar';
 
 const maincontroll = require('../maincontroll');
 var kioskID;
@@ -53,16 +54,21 @@ const checkInRecheck = ClientData => {
   MQTTConnection.publicCheckin(ClientData);
 };
 
-const checkSignal = (serverTime, setSignal) => {
-  if (serverTime >= 0.0 && serverTime <= 250.99) {
+const checkSignal = (ping, setSignal) => {
+  if (ping >= 0.0 && ping <= 199.99) {
+    console.log('Level4');
     setSignal(4);
-  } else if (serverTime >= 100.0 && serverTime <= 299.99) {
+  } else if (ping >= 200.0 && ping <= 299.99) {
+    console.log('Level3');
     setSignal(3);
-  } else if (serverTime >= 300.0 && serverTime <= 599.99) {
+  } else if (ping >= 300.0 && ping <= 599.99) {
+    console.log('Level2');
     setSignal(2);
-  } else if (serverTime >= 600.0 && serverTime <= 1999.99) {
+  } else if (ping >= 600.0 && ping <= 1999.99) {
+    console.log('Level1');
     setSignal(1);
   } else {
+    console.log('Level0');
     setSignal(0);
   }
 };
@@ -73,6 +79,7 @@ const vendingStatus = (productInsideElevator, pickupDoor, temperature) => {
     productInsideElevator(status.productInsideElevatorText);
     pickupDoor(status.pickupDoorText);
     temperature(status.temperature);
+    G.temperature = status.temperature;
   });
 };
 

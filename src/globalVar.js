@@ -1,0 +1,21 @@
+const data = {
+  startServerData: 0,
+  timeServerData: 0,
+  temperature: 0,
+  pingMS: 0,
+  signalLevel: 0,
+  KIOSKID: '',
+  REGISTERKEY: '',
+  TOKEN: '',
+  OWNER: '',
+  PUBLISH: [],
+  SUBSCRIBE: [],
+  mqttClient: {},
+  topicCheckIn: '',
+  topicApiCmd: '',
+  topicCron: '',
+  decodeToken: {},
+  QRPaymentResult: {},
+  paymentReady: false,
+};
+module.exports = data;

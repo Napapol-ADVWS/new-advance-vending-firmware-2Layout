@@ -19,22 +19,6 @@ export default class Prodshelf extends React.Component {
     };
   }
 
-  componentDidMount() {
-    // console.log(this.props.product);
-    // nextPage = 0;
-    // oldPage = 2980;
-    // clearInterval(this.activeIntervalDown);
-    // clearInterval(this.activeIntervalUp);
-    // setTimeout(() => {
-    //   this.activeIntervalDown = setInterval(this.startAutoPlay, 100);
-    // }, 3000);
-  }
-
-  componentWillUnmount() {
-    // clearInterval(this.activeIntervalDown);
-    // clearInterval(this.activeIntervalUp);
-  }
-
   startAutoPlay = () => {
     clearInterval(this.activeIntervalUp);
     if (!this.props.isScrollShelf) {
@@ -45,12 +29,6 @@ export default class Prodshelf extends React.Component {
           offset: 0 + nextPage,
         });
         nextPage = nextPage + 10;
-        // console.log(
-        //   'UP:',
-        //   nextPage,
-        //   '=',
-        //   nextPage >= 2980 && !this.state.selectProduct,
-        // );
         if (nextPage + 100 >= 2980) {
           clearInterval(this.activeIntervalDown);
           setTimeout(() => {
@@ -73,12 +51,6 @@ export default class Prodshelf extends React.Component {
           offset: oldPage - 10,
         });
         oldPage = oldPage - 10;
-        // console.log(
-        //   'DOWN:',
-        //   oldPage,
-        //   '=',
-        //   oldPage <= 0 && !this.state.selectProduct,
-        // );
         if (oldPage <= 0) {
           clearInterval(this.activeIntervalUp);
           setTimeout(() => {
@@ -171,19 +143,6 @@ export default class Prodshelf extends React.Component {
     console.log('TOUCH', offsetY);
     clearInterval(this.activeIntervalUp);
     clearInterval(this.activeIntervalDown);
-    // if (scrollTOStatus === 'down') {
-    //   setTimeout(() => {
-    //     nextPage = offsetY;
-    //     oldPage = 2980;
-    //     this.activeIntervalDown = setInterval(this.startAutoPlay, 100);
-    //   }, 10000);
-    // } else {
-    //   setTimeout(() => {
-    //     nextPage = 0;
-    //     oldPage = offsetY;
-    //     this.activeIntervalUp = setInterval(this.endAutoPlay, 100);
-    //   }, 10000);
-    // }
     const {onScrollShelf} = this.props;
     this.onScrollShelf = onScrollShelf;
     this.onScrollShelf();

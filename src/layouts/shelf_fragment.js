@@ -18,33 +18,29 @@ import Clock from '../components/shelf/Clock';
 import ProductRanking from '../components/shelf/ProductRanking';
 import ShelfTimeout from '../components/shelf/shelfTimeout';
 import BlinkView from '../components/payment/BlinkView';
-import Script from '../script';
-
+import G from '../globalVar';
 let timeout = 60;
 let nextPage = 0;
 let onScrollTime;
 export default function Shelf() {
-  const [category, setCatagory] = React.useState({});
+  const [category] = React.useState({});
   const [categoryBtn, setCatagoryBtn] = React.useState('all');
   const [payment, setPayment] = React.useState(false);
   const [isConnected, setIsConnected] = React.useState(false);
   const [setting, setSetting] = React.useState(false);
   const [prod, setProd] = React.useState();
-  const [CHANGE_MONEY, setCHANGE_MONEY] = useRecoilState(GOLBAL.CHANGE_MONEY);
-  const [TRAN_SUCCESS, setTRAN_SUCCESS] = useRecoilState(GOLBAL.TRAN_SUCCESS);
-  const [PICKPROD, setPICKPROD] = React.useState(false);
-  const [KIOSKID, setKioskID] = useRecoilState(GOLBAL.KIOSKID);
-  const onSetToken = useSetRecoilState(GOLBAL.TOKEN);
-  const [categoryData, setCategoryData] = useRecoilState(GOLBAL.category);
-  const [inventory, setInventory] = useRecoilState(GOLBAL.inventory);
-  const [inventoryAll, setInventoryAll] = useRecoilState(GOLBAL.inventoryAll);
-  const isSetInventory = useSetRecoilState(GOLBAL.inventory);
   const [isRank, setIsRank] = React.useState(false);
   const [onSelect, setOnSelect] = React.useState(false);
   const [isScrollShelf, setIsScrollShelf] = React.useState(false);
+  const [PICKPROD, setPICKPROD] = React.useState(false);
+
+  const [CHANGE_MONEY] = useRecoilState(GOLBAL.CHANGE_MONEY);
+  const [TRAN_SUCCESS] = useRecoilState(GOLBAL.TRAN_SUCCESS);
+  const [categoryData] = useRecoilState(GOLBAL.category);
+  const [inventory] = useRecoilState(GOLBAL.inventory);
+  const [inventoryAll] = useRecoilState(GOLBAL.inventoryAll);
+  const isSetInventory = useSetRecoilState(GOLBAL.inventory);
   const [productInsideElevator] = useRecoilState(GOLBAL.productInsideElevator);
-  const [pickupDoor] = useRecoilState(GOLBAL.pickupDoor);
-  const [ClientData] = useRecoilState(GOLBAL.mqttClient);
   const [temperature] = useRecoilState(GOLBAL.temperature);
 
   React.useEffect(() => {
@@ -71,9 +67,8 @@ export default function Shelf() {
     console.log('categoryData', categoryData);
     STORE.getItem('TOKEN', response => {
       if (response.result) {
-        onSetToken(response.data);
+        G.TOKEN = response.data;
         setIsConnected(true);
-        //this.activeIntervalTimeout = setInterval(timeoutScreenSaver, 1000);
       } else {
         setIsConnected(false);
       }
@@ -102,15 +97,12 @@ export default function Shelf() {
     }, 100);
   };
 
-  const selectProd =  item => {
+  const selectProd = item => {
     if (productInsideElevator === 'no') {
       setProd(item);
       setOnSelect(true);
-      // clearInterval(this.activeIntervalTimeout);
-      //setTimeout(() => {
       console.log(onSelect);
       setPayment(true);
-      //}, 500);
     } else {
       setPICKPROD(true);
       setTimeout(() => {
@@ -120,24 +112,19 @@ export default function Shelf() {
   };
 
   const cancalPayment = () => {
-    // clearInterval(this.activeIntervalTimeout);
     console.log('cancalPayment');
     setOnSelect(false);
     setPayment(false);
     timeout = 60;
-    // this.activeIntervalTimeout = setInterval(timeoutScreenSaver, 1000);
   };
 
   const openSetting = () => {
     setOnSelect(true);
-    //setSetting(true);
     navigate.navigate('Setting');
   };
 
   const closeSetting = () => {
-    //setOnSelect(false);
     setSetting(false);
-    //timeout = 60;
   };
 
   const closeProductRanking = () => {
@@ -192,7 +179,7 @@ export default function Shelf() {
             />
             <RN.View style={Styles.w90}>
               <RN.Text style={Styles.vending_detail_text}>
-                KIOSK : {KIOSKID}
+                KIOSK : {G.KIOSKID}
               </RN.Text>
               <RN.Text style={Styles.vending_detail_text}>
                 Version : 3.0.4

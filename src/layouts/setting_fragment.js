@@ -1,12 +1,10 @@
 import * as React from 'react';
 import * as RN from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {useRecoilState, useSetRecoilState} from 'recoil';
 import Modal from 'react-native-modal';
 import {Styles} from '../styles/setting_style';
 import POST from '../protocol';
 import STORE from '../storage';
-import * as GLOBAL from '../globalState';
 import InputServiceMode from '../components/setting/inputServiceMode';
 import CoinBillVaildator from '../components/setting/coinBillValidator';
 import DispenseProd from '../components/setting/dispenseProd';
@@ -20,19 +18,10 @@ import SettingRowLift from '../components/setting/settingRowLift';
 import ClearMotor from '../components/setting/clearMotor';
 import ClearLiftError from '../components/setting/clearLiftError';
 import LiftTest from '../components/setting/liftTest';
-import Script from '../script';
-import Restart from 'react-native-restart';
-import MQTTConnection from '../MQTTConnection';
 import RNFS from 'react-native-fs';
-
-const maincontroll = require('../../maincontroll');
+import G from '../globalVar';
 
 const Setting = () => {
-  const onSetToken = useSetRecoilState(GLOBAL.TOKEN);
-  const onSetKioskID = useSetRecoilState(GLOBAL.KIOSKID);
-  const onSetRegisterKey = useSetRecoilState(GLOBAL.REGISTERKEY);
-
-  const [ClientData] = useRecoilState(GLOBAL.mqttClient);
   const [kioskID, setKioskID] = React.useState('');
   const [registerKey, setRegisterKey] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -46,17 +35,17 @@ const Setting = () => {
     runApp();
   }, []);
 
-  const runApp =  () => {
+  const runApp = () => {
     STORE.getItem('KIOSKID', response => {
       console.log('KIOSKID', response);
       if (response.result) {
         setKioskID(response.data);
-        onSetKioskID(response.data);
+        G.KIOSKID = response.data;
         STORE.getItem('REGISTERKEY', response2 => {
           console.log('REGISTERKEY', response2.data);
           if (response2.result) {
             setRegisterKey(response2.data);
-            onSetRegisterKey(response2.data);
+            G.REGISTERKEY = response2.data;
             setIsReady(true);
           }
         });
@@ -64,13 +53,13 @@ const Setting = () => {
     });
   };
 
-  const onSaveKiosk =  () => {
+  const onSaveKiosk = () => {
     setIsLoading(true);
     var postdata = {
       kioskID: kioskID,
       registerKey: registerKey,
     };
-    POST.register(postdata,  callback => {
+    POST.register(postdata, callback => {
       console.log(callback);
       if (callback.code === 200 && callback.data) {
         setIsLoading(false);
@@ -87,7 +76,7 @@ const Setting = () => {
   const thisSetToken = token => {
     STORE.setItem('TOKEN', token, response => {
       if (response.result) {
-        onSetToken(response.data);
+        G.TOKEN = response.data;
       }
     });
   };
@@ -95,7 +84,7 @@ const Setting = () => {
   const thisSetKiosk = data => {
     STORE.setItem('KIOSKID', data, response => {
       if (response.result) {
-        onSetKioskID(data);
+        G.KIOSKID = data;
       }
     });
   };
@@ -103,7 +92,7 @@ const Setting = () => {
   const thisSetRegisterkey = data => {
     STORE.setItem('REGISTERKEY', data, response => {
       if (response.result) {
-        onSetRegisterKey(data);
+        G.REGISTERKEY = data;
       }
     });
   };

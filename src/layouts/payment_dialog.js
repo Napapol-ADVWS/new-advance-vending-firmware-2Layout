@@ -15,6 +15,7 @@ import POST from '../protocol';
 import CashPaymentScreen from './cash_payment_fragment';
 import QRPaymentScreen from './qr_payment_fragment';
 import CardPaymentScreen from './card_payment_fragment';
+import G from '../globalVar';
 
 var timeout = 10;
 const Payment = ({dismiss, prod}) => {
@@ -23,8 +24,7 @@ const Payment = ({dismiss, prod}) => {
   const [selectCash, setSelectCash] = React.useState(false);
   const [selectQr, setSelectQr] = React.useState(false);
   const [selectCard, setSelectCard] = React.useState(false);
-  const [cashAction, setCashAction] = React.useState(false);
-  const [prodjammed, setProdjammed] = React.useState(false);
+  const [prodjammed] = React.useState(false);
   const [stopTimeout, setStopTimeout] = React.useState(false);
   const [tranID, setTranID] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -34,11 +34,6 @@ const Payment = ({dismiss, prod}) => {
   const [cashStatus] = useRecoilState(GOLBAL.cash_method);
   const TRAN_SUCCESS = useSetRecoilState(GOLBAL.TRAN_SUCCESS);
   const [mqttClient] = useRecoilState(GOLBAL.mqttClient);
-  const [QRPaymentResult] = useRecoilState(GOLBAL.QRPaymentResult);
-  const setQRPaymentResult = useSetRecoilState(GOLBAL.QRPaymentResult);
-  const [paymentReady] = useRecoilState(GOLBAL.paymentReady);
-  const setPaymentReady = useSetRecoilState(GOLBAL.paymentReady);
-  const intervalTransRef = React.useRef(null);
   const maincontroll = require('../../maincontroll');
   console.log(product.slotID);
   console.log(':::::', cashStatus);
@@ -129,7 +124,7 @@ const Payment = ({dismiss, prod}) => {
   const onSelectCash = async () => {
     console.log('product.slotID', product.slotID);
     setStopTimeout(true);
-    setPaymentReady(true);
+    G.paymentReady = true;
     setSelectPay(false);
     setLoading(true);
     var openAccept = false;
@@ -159,7 +154,7 @@ const Payment = ({dismiss, prod}) => {
   };
 
   const onSelectQr = payType => {
-    setPaymentReady(true);
+    G.paymentReady = true;
     //maincontroll.selectionnumber(product.slotID, res => {
     // if (res.code !== '50205') {
     //   setProdjammed(false);
@@ -181,16 +176,16 @@ const Payment = ({dismiss, prod}) => {
     // }
     //});
     if (payType.type === 'card') {
-      setQRPaymentResult({});
+      G.QRPaymentResult = {};
       setStopTimeout(true);
-      setPaymentReady(true);
+      G.paymentReady = true;
       setSelectPay(false);
       setLoading(true);
       handleTransaction('Card');
     } else {
-      setQRPaymentResult({});
+      G.QRPaymentResult = {};
       setStopTimeout(true);
-      setPaymentReady(true);
+      G.paymentReady = true;
       setSelectPay(false);
       setLoading(true);
       handleTransaction('ThaiQR');
@@ -199,7 +194,7 @@ const Payment = ({dismiss, prod}) => {
 
   const onCloseSelectPayment = () => {
     setStopTimeout(false);
-    setPaymentReady(false);
+    G.paymentReady = false;
     setSelectPay(true);
     setSelectCash(false);
     setSelectQr(false);
@@ -208,9 +203,9 @@ const Payment = ({dismiss, prod}) => {
   };
 
   const onPaymentSccess = () => {
-    setPaymentReady(false);
+    G.paymentReady = false;
     dismiss();
-    setQRPaymentResult({});
+    G.QRPaymentResult = {};
     TRAN_SUCCESS(true);
     setTimeout(() => {
       TRAN_SUCCESS(false);
@@ -218,20 +213,20 @@ const Payment = ({dismiss, prod}) => {
   };
 
   const onPaymentFail = () => {
-    setPaymentReady(false);
+    G.paymentReady = false;
     dismiss();
-    setQRPaymentResult({});
+    G.QRPaymentResult = {};
   };
 
   const onPaymentCancel = () => {
     console.log('onPaymentCancel');
-    setPaymentReady(false);
+    G.paymentReady = false;
     onCloseSelectPayment();
-    setQRPaymentResult({});
+    G.QRPaymentResult = {};
   };
 
   const onPaymentTimeOut = () => {
-    setPaymentReady(false);
+    G.paymentReady = false;
     dismiss();
   };
 
