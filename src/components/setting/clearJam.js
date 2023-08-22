@@ -26,7 +26,13 @@ const ClearJammed = () => {
           เคลียร์ช่องสินค้า
         </RN.Text>
       </RN.TouchableOpacity>
-      <RN.View style={{width: '50%', padding: 20, justifyContent: 'center', height: 80}}>
+      <RN.View
+        style={{
+          width: '50%',
+          padding: 20,
+          justifyContent: 'center',
+          height: 80,
+        }}>
         <RN.Text style={{fontSize: 20, color: '#000', fontWeight: 'bold'}}>
           Status :{' '}
           {jamStatus === 'nonActive' && (
