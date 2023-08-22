@@ -17,5 +17,6 @@ const data = {
   decodeToken: {},
   QRPaymentResult: {},
   paymentReady: false,
+  VERSION: '3.0.5',
 };
 module.exports = data;
