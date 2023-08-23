@@ -139,12 +139,6 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
               refundMoney('error', 'Process Error .', '9999');
             }, 3000);
           }
-        } else {
-          setVendingStatus('Process Error .');
-          setLoadDispense(true);
-          setDispenseError(true);
-          setMsgError('เกิดข้อผิดพลาดในการทำรายการ .');
-          errorTransaction('Process Error .', '9999');
         }
       }
     }
