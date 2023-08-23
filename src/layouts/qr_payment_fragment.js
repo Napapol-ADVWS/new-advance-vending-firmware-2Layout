@@ -85,65 +85,62 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
         }
         console.log('callbackDispense::', callbackDispense);
         if (callbackDispense && !callbackDispense.result) {
-          if (!callbackDispense.result && callbackDispense.code === '104001') {
+          if (callbackDispense.code === '104001') {
             setVendingStatus(callbackDispense.message);
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            setTimeout(() => {
-              refundMoney('error', 'No VMC Event: selectionnumber', '104001');
+            setTimeout( () => {
+               refundMoney('error', 'No VMC Event: selectionnumber', '104001');
             }, 3000);
-          } else if (
-            !callbackDispense.result &&
-            callbackDispense.code === '50204'
-          ) {
+          } else if (callbackDispense.code === '50204') {
             setVendingStatus(callbackDispense.message);
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            setTimeout(() => {
-              refundMoney('error', 'selection pause', '50204');
+
+            setTimeout( () => {
+               refundMoney('error', 'selection pause', '50204');
             }, 3000);
-          } else if (
-            !callbackDispense.result &&
-            callbackDispense.code === '50205'
-          ) {
+          } else if (callbackDispense.code === '50205') {
+            setLoadDispense(true);
+            setDispenseError(true);
+            setMsgError(ERR.msgError(callbackDispense.code));
+
+            // setTimeout(() => {    ????
+            //   dispenseProduct();
+            // }, 3000);
+          } else if (callbackDispense.code === '50203') {
             setVendingStatus(callbackDispense.message);
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            G.PaymentSuccess = false;
-            setTimeout(() => {
-              checkInputQRPayment();
+            setTimeout( () => {
+               refundMoney('error', 'selection doesn’t exist', '50203');
             }, 3000);
-          } else if (
-            !callbackDispense.result &&
-            callbackDispense.code === '50207'
-          ) {
+          } else if (callbackDispense.code === '50207') {
             setVendingStatus(callbackDispense.message);
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            setTimeout(() => {
-              refundMoney('error', 'Elevator error', '50207');
+            setTimeout( () => {
+               refundMoney('error', 'Elevator error', '50207');
             }, 3000);
           } else {
-            if (!callbackDispense.result) {
               setVendingStatus(callbackDispense.message);
               setLoadDispense(true);
               setDispenseError(true);
               setMsgError(ERR.msgError(callbackDispense.code));
-              setTimeout(() => {
-                refundMoney('error', 'Process Error .', '9999');
+              setTimeout( () => {
+                 refundMoney('error', 'Process Error .', '9999');
               }, 3000);
-            } else {
-              setVendingStatus('Process Error .');
-              setLoadDispense(true);
-              setDispenseError(true);
-              setMsgError('เกิดข้อผิดพลาดในการทำรายการ .');
-              errorTransaction('Process Error .', '9999');
-            }
           }
+        }else{
+          setVendingStatus('Process Error .');
+          setLoadDispense(true);
+          setDispenseError(true);
+          setMsgError('เกิดข้อผิดพลาดในการทำรายการ .');
+          errorTransaction('Process Error .', '9999');
         }
       }
     }
