@@ -34,18 +34,16 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
       checkInputQRPayment();
       firstload = true;
     }
-    if (disableCancel) return ()=>{isMounted=false};
+    if (disableCancel) return ()=>{clearTimeout(time_counter)};
     if (timer <= 0) {
       closePayment();
-      return ()=>{isMounted=false};
+      return ()=>{clearTimeout(time_counter)};
     }
     time_counter = setTimeout(() => {
-      if(isMounted){
         setTimer(prevCount => prevCount - 1);
         console.log('timer qr : ', timer);
-      }
     }, 1000);
-    return ()=>{isMounted=false};
+    return ()=>{clearTimeout(time_counter)};
   }, [timer, disableCancel]);
 
   const startMDB = () => {
