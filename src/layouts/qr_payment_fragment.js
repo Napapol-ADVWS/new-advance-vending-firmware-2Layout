@@ -28,22 +28,29 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
   let time_counter = false;
 
   React.useEffect(() => {
-    let isMounted=true;
+    let isMounted = true;
     if (!firstload) {
       startMDB();
       checkInputQRPayment();
       firstload = true;
     }
-    if (disableCancel) return ()=>{clearTimeout(time_counter)};
+    if (disableCancel)
+      return () => {
+        clearTimeout(time_counter);
+      };
     if (timer <= 0) {
       closePayment();
-      return ()=>{clearTimeout(time_counter)};
+      return () => {
+        clearTimeout(time_counter);
+      };
     }
     time_counter = setTimeout(() => {
-        setTimer(prevCount => prevCount - 1);
-        console.log('timer qr : ', timer);
+      setTimer(prevCount => prevCount - 1);
+      console.log('timer qr : ', timer);
     }, 1000);
-    return ()=>{clearTimeout(time_counter)};
+    return () => {
+      clearTimeout(time_counter);
+    };
   }, [timer, disableCancel]);
 
   const startMDB = () => {
