@@ -27,20 +27,24 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
   let time_counter = false;
 
   React.useEffect(() => {
+    let isMounted=true;
     if (!firstload) {
       startMDB();
       checkInputQRPayment();
       firstload = true;
     }
-    if (disableCancel) return;
+    if (disableCancel) return ()=>{isMounted=false};
     if (timer <= 0) {
       closePayment();
-      return;
+      return ()=>{isMounted=false};
     }
     time_counter = setTimeout(() => {
-      setTimer(prevCount => prevCount - 1);
-      console.log('timer qr : ', timer);
+      if(isMounted){
+        setTimer(prevCount => prevCount - 1);
+        console.log('timer card : ', timer);
+      }
     }, 1000);
+     return ()=>{isMounted=false};
   }, [timer, disableCancel]);
 
   const startMDB = () => {

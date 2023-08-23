@@ -29,19 +29,23 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
   let firstload = false;
   let time_counter = false;
   React.useEffect(() => {
+    let isMounted=true;
     if (!firstload) {
       startMDB();
       firstload = true;
     }
-    if (disableCancel) return;
+    if (disableCancel) return ()=>{isMounted=false};
     if (timer <= 0) {
       closePayment();
-      return;
+      return ()=>{isMounted=false};
     }
     time_counter = setTimeout(() => {
-      setTimer(prevCount => prevCount - 1);
-      console.log('timer cash : ', timer);
+      if(isMounted){
+        setTimer(prevCount => prevCount - 1);
+        console.log('timer cash : ', timer);
+      }
     }, 1000);
+     return ()=>{isMounted=false};
   }, [timer, disableCancel]);
 
   const startMDB = () => {
