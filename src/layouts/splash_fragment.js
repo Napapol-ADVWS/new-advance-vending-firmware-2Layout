@@ -27,7 +27,7 @@ export default function Splash() {
       G.startServerData = Date.now();
       Script.checkSignal(G.pingMS, setSignal);
       var payload = {
-        coinStack: Script.getLastCoinStack(),
+        coinStack: G.coinStack,
         boardStatus: true,
         mdbStatus: true,
         temperature: G.temperature,

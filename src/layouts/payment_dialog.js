@@ -57,6 +57,8 @@ const Payment = ({dismiss, prod}) => {
 
   const handleTransaction = type => {
     console.log('PROD==========>', product);
+    G.startSuccess = false;
+    G.PaymentSuccess = false;
     let prodPrice =
       product.price.sale > 0 ? product.price.sale : product.price.normal;
     let postdata = {

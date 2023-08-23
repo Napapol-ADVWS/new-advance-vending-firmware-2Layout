@@ -7,6 +7,7 @@ import {SkypeIndicator} from 'react-native-indicators';
 import {Styles} from '../styles/cash_style';
 import ERR from '../msgError';
 import Script from '../script';
+import G from '../globalVar';
 
 const maincontroll = require('../../maincontroll');
 
@@ -22,7 +23,6 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
   const [changeMoney, setChangeMoney] = React.useState(0);
   const [vendingStatus, setVendingStatus] = React.useState('');
   const [disableCancel, setDisableCancel] = React.useState(false);
-  const [startSuccess, setStartSucess] = React.useState(false);
   const [showCancel, setShowCancel] = React.useState(false);
 
   let moneyInput = {coin: 0, bill: 0, total: 0};
@@ -45,10 +45,10 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
   }, [timer, disableCancel]);
 
   const startMDB = () => {
-    if (!startSuccess) {
+    if (!G.startSuccess) {
       setVendingStatus('Ready');
       receiveMoney();
-      setStartSucess(true);
+      G.startSuccess = true;
     }
   };
 

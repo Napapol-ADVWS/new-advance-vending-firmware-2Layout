@@ -22,8 +22,6 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
   const [disableCancel, setDisableCancel] = React.useState(false);
   const [loadTran, setLoadTran] = React.useState(true);
   const [QrPayment, setQrPayment] = React.useState('data:image/png;base64,');
-  const [startSuccess, setStartSucess] = React.useState(false);
-  const [PaymentSuccess, setPaymentSuccess] = React.useState(false);
 
   let moneyInput = {coin: 0, bill: 0, total: 0};
   let firstload = false;
@@ -48,25 +46,25 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
 
   const startMDB = () => {
     console.log('startMDB');
-    if (!startSuccess) {
+    if (!G.startSuccess) {
       dispenseTimeout = 0;
-      console.log(startSuccess);
+      console.log(G.startSuccess);
       let tempBase64 = QrPayment;
       let imageQr = tempBase64 + transaction.qr.imageWithBase64;
       setQrPayment(imageQr);
       setVendingStatus('Ready');
       setLoadTran(false);
-      setStartSucess(true);
+      G.startSuccess = true;
     }
   };
 
   const checkInputQRPayment = async () => {
     if (G.QRPaymentResult.status === 'success' && G.paymentReady) {
       dispenseStatus();
-      if (!PaymentSuccess) {
+      if (!G.PaymentSuccess) {
         console.log('PaymentSuccess::', G.QRPaymentResult);
         clearTimeout(time_counter);
-        setPaymentSuccess(true);
+        G.PaymentSuccess = true;
         setDisableCancel(true);
         var callbackDispense = false;
         try {
@@ -79,7 +77,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           } else {
             setTimeout(() => {
               dispenseTimeout++;
-              setPaymentSuccess(false);
+              G.PaymentSuccess = false;
               checkInputQRPayment();
             }, 3000);
             return;
@@ -114,7 +112,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            setPaymentSuccess(false);
+            G.PaymentSuccess = false;
             setTimeout(() => {
               checkInputQRPayment();
             }, 3000);
@@ -191,7 +189,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           break;
         case '50440':
           setVendingStatus(res.message);
-          setPaymentSuccess(false);
+          G.PaymentSuccess = false;
           break;
         case '50441':
           setVendingStatus(res.message);

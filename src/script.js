@@ -1,5 +1,4 @@
 import MQTTConnection from './MQTTConnection';
-import moment from 'moment';
 import STORE from './storage';
 import jwt_decode from 'jwt-decode';
 import POST from './protocol';
@@ -9,7 +8,7 @@ import G from './globalVar';
 const maincontroll = require('../maincontroll');
 var kioskID;
 let ownerID;
-let coinStack;
+let coinStack = {C1: 0, C2: 0, C5: 0, C10: 0};
 
 const checkIn = async ClientData => {
   console.log('start check in', ClientData);
@@ -91,6 +90,7 @@ const checkCoinStack = async () => {
   let coin5 = getCoinStack.coin5 ? getCoinStack.coin5 : 0;
   let coin10 = getCoinStack.coin10 ? getCoinStack.coin10 : 0;
   coinStack = {C1: coin1, C2: coin2, C5: coin5, C10: coin10};
+  G.coinStack = coinStack;
   return coinStack;
 };
 
