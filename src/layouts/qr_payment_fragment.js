@@ -92,8 +92,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            setTimeout( () => {
-               refundMoney('error', 'No VMC Event: selectionnumber', '104001');
+            setTimeout(() => {
+              refundMoney('error', 'No VMC Event: selectionnumber', '104001');
             }, 3000);
           } else if (callbackDispense.code === '50204') {
             setVendingStatus(callbackDispense.message);
@@ -101,8 +101,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
 
-            setTimeout( () => {
-               refundMoney('error', 'selection pause', '50204');
+            setTimeout(() => {
+              refundMoney('error', 'selection pause', '50204');
             }, 3000);
           } else if (callbackDispense.code === '50205') {
             setLoadDispense(true);
@@ -117,27 +117,27 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            setTimeout( () => {
-               refundMoney('error', 'selection doesn’t exist', '50203');
+            setTimeout(() => {
+              refundMoney('error', 'selection doesn’t exist', '50203');
             }, 3000);
           } else if (callbackDispense.code === '50207') {
             setVendingStatus(callbackDispense.message);
             setLoadDispense(true);
             setDispenseError(true);
             setMsgError(ERR.msgError(callbackDispense.code));
-            setTimeout( () => {
-               refundMoney('error', 'Elevator error', '50207');
+            setTimeout(() => {
+              refundMoney('error', 'Elevator error', '50207');
             }, 3000);
           } else {
-              setVendingStatus(callbackDispense.message);
-              setLoadDispense(true);
-              setDispenseError(true);
-              setMsgError(ERR.msgError(callbackDispense.code));
-              setTimeout( () => {
-                 refundMoney('error', 'Process Error .', '9999');
-              }, 3000);
+            setVendingStatus(callbackDispense.message);
+            setLoadDispense(true);
+            setDispenseError(true);
+            setMsgError(ERR.msgError(callbackDispense.code));
+            setTimeout(() => {
+              refundMoney('error', 'Process Error .', '9999');
+            }, 3000);
           }
-        }else{
+        } else {
           setVendingStatus('Process Error .');
           setLoadDispense(true);
           setDispenseError(true);

@@ -35,6 +35,8 @@ const checkToken = cb => {
 };
 
 const MAINPOST = (url, postdata, token, cb) => {
+  console.log('POST', url, postdata);
+  console.log(token);
   fetch(url, {
     method: 'POST',
     headers: {
@@ -46,6 +48,7 @@ const MAINPOST = (url, postdata, token, cb) => {
     timeout: 3000,
   })
     .then(response => {
+      console.log('response::::', response);
       return response.json();
     })
     .then(data => {

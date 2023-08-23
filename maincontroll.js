@@ -75,7 +75,7 @@ async function OpenPort() {
 }
 
 function decodeMessage(buffer) {
-  console.log(buffer.toString('hex'));
+  //console.log(buffer.toString('hex'));
   if (buffer.length == 0) return; //   No data;
   let data = {message: buffer, text: buffer.toString('hex')};
   // buffer = Buffer.alloc(0); // Clear Buffer
