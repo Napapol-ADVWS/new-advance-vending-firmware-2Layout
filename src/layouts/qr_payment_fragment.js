@@ -200,7 +200,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           setDispenseError(true);
           setMsgError(ERR.msgError(res.code));
           maincontroll.off('dispense');
-          await refundMoney('error', 'selection doesn’t exist', '50403');
+          await refundMoney('error', 'selection jammed', '50403');
           break;
         case '50205':
           setVendingStatus(res.message);

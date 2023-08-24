@@ -89,10 +89,17 @@ export default class Prodshelf extends React.Component {
       onPress={() => {
         this.onSelectProd(item);
       }}>
-      <RN.Image
-        source={{uri: item.productImage}}
-        style={Styles.product_image}
-      />
+      {item.productImage != 'https://noimageurl' ? (
+        <RN.Image
+          source={{uri: item.productImage}}
+          style={Styles.product_image}
+        />
+      ) : (
+        <RN.Image
+          source={require('../../../assets/images/box.png')}
+          style={Styles.product_image_not_found}
+        />
+      )}
       {item.price.sale > 0 && (
         <>
           <RN.Image

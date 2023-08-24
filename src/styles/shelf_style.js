@@ -483,4 +483,11 @@ export const Styles = StyleSheet.create({
     right: 70,
     bottom: -200.5,
   },
+  product_image_not_found: {
+    resizeMode: 'contain',
+    width: 220,
+    height: 220,
+    backgroundColor: 'transparent',
+    tintColor: '#ddd',
+  },
 });
