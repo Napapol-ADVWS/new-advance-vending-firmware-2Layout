@@ -68,7 +68,11 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
   };
 
   const checkInputQRPayment = async () => {
-    if (G.QRPaymentResult.status === 'success' && G.paymentReady) {
+    if (
+      G.QRPaymentResult.status === 'success' &&
+      G.paymentReady &&
+      Number(G.QRPaymentResult.qr_ref) === Number(transaction.transactionID)
+    ) {
       dispenseStatus();
       if (!G.PaymentSuccess) {
         console.log('PaymentSuccess::', G.QRPaymentResult);

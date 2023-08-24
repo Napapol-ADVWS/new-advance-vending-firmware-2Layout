@@ -64,7 +64,11 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
   };
 
   const checkInputQRPayment = async () => {
-    if (G.QRPaymentResult.status === 'success' && G.paymentReady) {
+    if (
+      G.QRPaymentResult.status === 'success' &&
+      G.paymentReady &&
+      Number(G.QRPaymentResult.qr_ref) === Number(transaction.transactionID)
+    ) {
       dispenseStatus();
       clearTimeout(time_counter);
       if (!G.PaymentSuccess) {
