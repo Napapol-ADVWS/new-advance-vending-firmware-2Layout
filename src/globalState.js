@@ -196,3 +196,8 @@ export const timeServer = atom({
   key: 'timeServer',
   default: 0,
 });
+
+export const videoReady = atom({
+  key: 'videoReady',
+  default: false,
+});

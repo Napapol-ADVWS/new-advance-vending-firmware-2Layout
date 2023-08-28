@@ -17,9 +17,8 @@ var checkInMQTT = false;
 export default function Splash() {
   const width = new Animated.Value(250);
   const height = new Animated.Value(250);
-  const [onAds, setOnAds] = useRecoilState(GLOBAL.ads);
+  const [isVideoReady, setIsVideoReady] = useRecoilState(GLOBAL.videoReady);
   const [isVideo, setIsVideo] = React.useState('');
-  const [isVideoReady, setIsVideoReady] = React.useState(false);
   const setSignal = useSetRecoilState(GLOBAL.signals);
 
   React.useEffect(() => {
@@ -60,18 +59,6 @@ export default function Splash() {
     navigate.navigate('Shelf');
   };
 
-  const playVideo = () => {
-    console.log('==>', onAds);
-    // if (countVideo + 1 >= onAds.length) {
-    //   countVideo = 0;
-    //   setIsVideo(onAds[countVideo].url);
-    //   setIsVideoReady(true);
-    // } else {
-    //   setIsVideo(onAds[countVideo].url);
-    //   setIsVideoReady(true);
-    // }
-  };
-
   return (
     <>
       <LinearGradient
@@ -98,20 +85,24 @@ export default function Splash() {
                 <AdsVideo />
               </>
             )}
-            <RN.View style={Styles.btn_tap_container}>
-              <RN.Text style={Styles.btn_tap_text_en}>
-                TAP TO BUY PRODUCT
-              </RN.Text>
-              <RN.Text style={Styles.btn_tap_text_th}>
-                แตะเพื่อซื้อสินค้า
-              </RN.Text>
-            </RN.View>
-            <RN.View style={Styles.icon_container}>
-              <Animated.Image
-                source={require('../../assets/images/tab_icon.png')}
-                style={[Styles.icon_image, {width: width, height: height}]}
-              />
-            </RN.View>
+            {!isVideoReady && (
+              <>
+                <RN.View style={Styles.btn_tap_container}>
+                  <RN.Text style={Styles.btn_tap_text_en}>
+                    TAP TO BUY PRODUCT
+                  </RN.Text>
+                  <RN.Text style={Styles.btn_tap_text_th}>
+                    แตะเพื่อซื้อสินค้า
+                  </RN.Text>
+                </RN.View>
+                <RN.View style={Styles.icon_container}>
+                  <Animated.Image
+                    source={require('../../assets/images/tab_icon.png')}
+                    style={[Styles.icon_image, {width: width, height: height}]}
+                  />
+                </RN.View>
+              </>
+            )}
           </RN.ImageBackground>
         </RN.TouchableOpacity>
       </LinearGradient>

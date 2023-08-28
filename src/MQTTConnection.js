@@ -74,6 +74,7 @@ const connect = (user, clientId, subscribe, publish, cb) => {
         if (topicApiCmdStatus) {
           var payload = {
             cmd: 'get_inventory',
+            xy: true,
           };
           client.publish(
             '/server/api/command',

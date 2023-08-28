@@ -4,6 +4,7 @@ import jwt_decode from 'jwt-decode';
 import POST from './protocol';
 import Script from './script';
 import G from './globalVar';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const maincontroll = require('../maincontroll');
 var kioskID;
@@ -98,6 +99,49 @@ const getLastCoinStack = () => {
   return coinStack;
 };
 
+const checkURLVideo = (videoUrl, cb) => {
+  STORE.getItem('adsURL', async res => {
+    if (res.result) {
+      if (res.data === videoUrl) {
+        STORE.getItem('adsURL', async adsData => {
+          cb(adsData.data);
+        });
+      } else {
+        STORE.setItem('adsURL', videoUrl, callback => {
+          if (callback.result) {
+            downloadFileADS(videoUrl, cb);
+          }
+        });
+      }
+    } else {
+      STORE.setItem('adsURL', videoUrl, callback => {
+        if (callback.result) {
+          downloadFileADS(videoUrl, cb);
+        }
+      });
+    }
+  });
+};
+
+const downloadFileADS = async (videoUrl, cb) => {
+  try {
+    const response = await RNFetchBlob.config({
+      fileCache: true,
+    }).fetch('GET', videoUrl);
+
+    // ดึงข้อมูลไฟล์จาก response
+    const fileData = response.data;
+    STORE.setItem('adsVideo', fileData, callback => {
+      if (callback.result) {
+        cb(fileData);
+      }
+    });
+    // ทำอะไรกับไฟล์ที่ดาวน์โหลด
+  } catch (error) {
+    console.error('Error downloading file:', error);
+  }
+};
+
 export default {
   checkIn,
   checkInV2,
@@ -106,4 +150,6 @@ export default {
   checkCoinStack,
   checkInRecheck,
   getLastCoinStack,
+  downloadFileADS,
+  checkURLVideo,
 };

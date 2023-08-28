@@ -24,6 +24,7 @@ export default function StartScreen() {
   const [isInventory] = useRecoilState(GLOBAL.inventory);
   const [isPaymentMethod] = useRecoilState(GLOBAL.payment_method);
   const inventory = useSetRecoilState(GLOBAL.inventory);
+  const ads = useSetRecoilState(GLOBAL.ads);
   const payment_method = useSetRecoilState(GLOBAL.payment_method);
   const cash_method = useSetRecoilState(GLOBAL.cash_method);
   const category = useSetRecoilState(GLOBAL.category);
@@ -31,6 +32,7 @@ export default function StartScreen() {
   const productInsideElevator = useSetRecoilState(GLOBAL.productInsideElevator);
   const pickupDoor = useSetRecoilState(GLOBAL.pickupDoor);
   const temperature = useSetRecoilState(GLOBAL.temperature);
+  const videoReady = useSetRecoilState(GLOBAL.videoReady);
 
   React.useEffect(() => {
     runApp();
@@ -181,10 +183,23 @@ export default function StartScreen() {
             setIsLoading(100);
             break;
           case 'setup_ads':
-            if (callback.config.ads) {
-              console.log(callback.config.ads);
-              //   ads(callback.config.ads);
-              //   playVideo();
+            if (
+              callback.config.ads &&
+              typeof callback.config.ads === 'string'
+            ) {
+              if (callback.config.ads === '') {
+                console.log('close ads');
+                videoReady(false);
+              } else {
+                console.log('setup_ads:', callback.config.ads);
+                Script.checkURLVideo(callback.config.ads, res => {
+                  console.log(res);
+                  if (res) {
+                    ads(res);
+                    videoReady(true);
+                  }
+                });
+              }
             }
             break;
           case 'setup_qr_payment_method':

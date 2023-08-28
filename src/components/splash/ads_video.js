@@ -2,8 +2,11 @@ import * as React from 'react';
 import * as RN from 'react-native';
 import Video from 'react-native-video';
 import {Styles} from '../../styles/splash_style';
+import {useRecoilState} from 'recoil';
+import * as GLOBAL from '../../globalState';
 
 const AdsVideo = () => {
+  const [ads] = useRecoilState(GLOBAL.ads);
   const videoError = msg => {
     console.log('MSG Error:', msg);
   };
@@ -18,7 +21,7 @@ const AdsVideo = () => {
       />
       <Video
         source={{
-          uri: 'https://storage.googleapis.com/video-vending/JewelryBox01.mp4',
+          uri: ads,
         }}
         repeat={true}
         style={Styles.video_container}
