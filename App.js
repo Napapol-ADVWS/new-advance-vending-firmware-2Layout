@@ -13,6 +13,7 @@ export default function App() {
       await maincontroll.setcoinaccept(false);
       await maincontroll.setbillaccept(false);
       await maincontroll.clearselectionjammed('clear');
+      await maincontroll.temperaturecontrollerconnect('setting', true);
       await maincontroll.clearmotorerror('clear');
       await maincontroll.clearlifterror('clear');
     }, 1000);
