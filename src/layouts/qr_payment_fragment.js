@@ -380,7 +380,7 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
               <>
                 <RN.View style={Styles.mobile_banking_container}>
                   <RN.Image
-                    source={require('../../assets/images/mobile_banking.png')}
+                    source={require('../../assets/images/mobile_banking2.png')}
                     style={Styles.mobile_banking_image}
                   />
                   <RN.Text style={Styles.title_text}>
