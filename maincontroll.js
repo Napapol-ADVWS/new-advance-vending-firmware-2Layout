@@ -964,6 +964,19 @@ maincontroll.selectiontest = async SlotId => {
   return await calwaitingevent('selectiontest');
 };
 
+let slotTest = 0;
+maincontroll.multiselectiontest = async (start, end, firsttime) => {
+  if (firsttime == true) slotTest = start;
+  if (slotTest <= end) {
+    const slot = await maincontroll.selectiontest(slotTest);
+    slotTest++;
+    maincontroll.multiselectiontest(start, end, false);
+  } else {
+    slotTest = 0;
+  }
+  return {result: true, message: 'Selection Testing', code: '2703899'};
+};
+
 maincontroll.lifttest = async LayerNumber => {
   var vmcact = await sendAndWait({
     e: 'lifttest',

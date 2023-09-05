@@ -8,13 +8,17 @@ const ClearLiftError = () => {
 
   const clearLift = async () => {
     setLiftStatus('loading');
-    const callback = await maincontroll.clearlifterror('clear');
+    const callback = await maincontroll.clearlifterror('setting');
     if (callback.result) {
       setLiftStatus('activated');
     } else {
       setLiftStatus('error');
     }
     console.log('CLEAR LIFT:::', callback);
+  };
+
+  const testAllMotor = async () => {
+    await maincontroll.multiselectiontest(1, 70, true);
   };
 
   return (
@@ -45,6 +49,13 @@ const ClearLiftError = () => {
           {liftStatus === 'loading' && <RN.ActivityIndicator size="large" />}
         </RN.Text>
       </RN.View>
+      <RN.TouchableOpacity
+        style={Styles.btn_clearJam_content}
+        onPress={() => testAllMotor()}>
+        <RN.Text style={Styles.btn_settingDevice_text}>
+          ทดสอบมอร์เตอร์ทั้งหมด
+        </RN.Text>
+      </RN.TouchableOpacity>
     </RN.View>
   );
 };

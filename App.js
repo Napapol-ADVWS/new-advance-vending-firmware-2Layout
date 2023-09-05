@@ -15,7 +15,7 @@ export default function App() {
       await maincontroll.clearselectionjammed('clear');
       await maincontroll.temperaturecontrollerconnect('setting', true);
       await maincontroll.clearmotorerror('clear');
-      await maincontroll.clearlifterror('clear');
+      await maincontroll.clearlifterror('setting');
     }, 1000);
   }
 

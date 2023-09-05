@@ -137,6 +137,8 @@ export const Styles = StyleSheet.create({
   btn_settingDevice_text: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#000',
+    textAlign: 'center',
   },
   btn_settingDevice_container_footer: {
     width: '70%',
