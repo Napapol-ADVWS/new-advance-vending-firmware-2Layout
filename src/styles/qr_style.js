@@ -23,6 +23,7 @@ export const Styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 10,
     elevation: 3,
+    marginBottom: '3%',
   },
   timer_content: {
     width: '30%',

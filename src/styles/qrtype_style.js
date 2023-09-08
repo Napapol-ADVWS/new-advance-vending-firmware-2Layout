@@ -3,8 +3,9 @@ import {StyleSheet} from 'react-native';
 export const Styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: '25%',
+    height: 'auto',
     alignItems: 'center',
+    marginTop: 20,
   },
   title_content: {
     width: '100%',
@@ -42,8 +43,8 @@ export const Styles = StyleSheet.create({
     bottom: 15,
   },
   image_qr_type: {
-    width: 200,
-    height: 200,
+    width: 160,
+    height: 160,
     resizeMode: 'contain',
   },
   btn_qr_card: {
@@ -58,6 +59,15 @@ export const Styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 10,
     elevation: 3,
+  },
+  payment_button_text: {
+    color: '#000',
+    backgroundColor: '#fff',
+    width: '50%',
+    textAlign: 'center',
+    elevation: 2,
+    fontWeight: 'bold',
+    borderRadius: 10,
   },
   btn_qr_card_container: {
     alignItems: 'center',

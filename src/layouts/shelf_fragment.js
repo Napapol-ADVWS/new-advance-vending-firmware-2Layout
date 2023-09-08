@@ -10,7 +10,7 @@ import {Styles} from '../styles/shelf_style';
 import Modal from 'react-native-modal';
 import {useRecoilState, useSetRecoilState} from 'recoil';
 import * as GOLBAL from '../globalState';
-import Payment from './payment_dialog';
+import Payment from './payment_dialog_v2';
 import StaffMode from '../components/shelf/StaffMode';
 import STORE from '../storage';
 import Prodshelf from '../components/shelf/Prodshelf';
@@ -244,7 +244,6 @@ export default function Shelf() {
         style={{margin: 0, padding: 70}}
         backdropOpacity={0.8}>
         <Payment dismiss={cancalPayment} prod={prod} />
-        <RN.View style={Styles.blockBackdrop} />
       </Modal>
       <Modal isVisible={CHANGE_MONEY}>
         <RN.View style={Styles.modal_changemoney}>

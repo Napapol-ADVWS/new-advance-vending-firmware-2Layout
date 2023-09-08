@@ -5,10 +5,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as navigate from '../../navigator/RootNavigation';
 
 import {Styles} from '../../styles/staffmode_style';
+import storage from '../../storage';
 
 const StaffMode = ({dismiss}) => {
   const [password, setPassword] = React.useState('');
   const [numpad] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const [msgError, setMsgError] = React.useState(false);
 
   const renderItem = ({item}) => (
     <RN.TouchableOpacity
@@ -27,8 +29,17 @@ const StaffMode = ({dismiss}) => {
   };
 
   const onEnter = () => {
-    dismiss();
-    navigate.navigate('Setting');
+    setMsgError(false);
+    storage.getItem('PIN', res => {
+      if (res.result) {
+        if (res.data === password) {
+          dismiss();
+          navigate.navigate('Setting');
+        }
+      } else {
+        setMsgError(true);
+      }
+    });
   };
 
   return (

@@ -17,7 +17,7 @@ const data = {
   decodeToken: {},
   QRPaymentResult: {},
   paymentReady: false,
-  VERSION: '3.0.5-C',
+  VERSION: '3.0.6-C',
   coinStack: {C1: 0, C2: 0, C5: 0, C10: 0},
   startSuccess: false,
   PaymentSuccess: false,

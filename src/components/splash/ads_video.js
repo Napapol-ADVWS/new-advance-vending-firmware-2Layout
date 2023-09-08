@@ -13,6 +13,7 @@ const AdsVideo = () => {
   const onBuffer = msg => {
     console.log('MSG Buffer', msg);
   };
+  console.log('My video:::', ads);
   return (
     <>
       <RN.Image
@@ -20,9 +21,7 @@ const AdsVideo = () => {
         style={Styles.logo_image2}
       />
       <Video
-        source={{
-          uri: ads,
-        }}
+        source={{uri: ads}}
         repeat={true}
         style={Styles.video_container}
         resizeMode="contain"

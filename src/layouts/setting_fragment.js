@@ -20,6 +20,7 @@ import ClearLiftError from '../components/setting/clearLiftError';
 import LiftTest from '../components/setting/liftTest';
 import RNFS from 'react-native-fs';
 import G from '../globalVar';
+import PinSetting from '../components/setting/pinSetting';
 
 const Setting = () => {
   const [kioskID, setKioskID] = React.useState('');
@@ -177,6 +178,7 @@ const Setting = () => {
               </RN.TouchableOpacity>
             </RN.View>
           </RN.View>
+          <PinSetting />
           <CoinBillVaildator />
           {/* <GiveChange /> */}
           <DispenseProd />

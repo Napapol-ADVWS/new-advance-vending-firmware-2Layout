@@ -103,7 +103,7 @@ const checkURLVideo = (videoUrl, cb) => {
   STORE.getItem('adsURL', async res => {
     if (res.result) {
       if (res.data === videoUrl) {
-        STORE.getItem('adsURL', async adsData => {
+        STORE.getItem('adsVideo', async adsData => {
           cb(adsData.data);
         });
       } else {

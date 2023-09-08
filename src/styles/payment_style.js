@@ -146,7 +146,8 @@ export const Styles = StyleSheet.create({
   timer_container: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 70,
+    marginTop: 30,
+    marginBottom: 30,
   },
   timer_content: {
     width: '22%',

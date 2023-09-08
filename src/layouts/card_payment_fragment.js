@@ -309,25 +309,6 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
               {moment.unix(timer).format('mm:ss')}
             </RN.Text>
           </RN.View>
-          <RN.View style={Styles.product_price_container}>
-            <RN.View style={Styles.price_text_content}>
-              <RN.Text style={Styles.price_text}>
-                ฿{' '}
-                {product.price.sale > 0
-                  ? product.price.sale
-                  : product.price.normal}
-              </RN.Text>
-            </RN.View>
-            <RN.View style={Styles.prduct_image_content}>
-              <RN.Image
-                source={{uri: product.productImage}}
-                style={Styles.product_image}
-              />
-              <RN.Text style={Styles.prduct_name_text}>
-                {product.productName}
-              </RN.Text>
-            </RN.View>
-          </RN.View>
           <RN.View style={Styles.input_money_container}>
             {LoadDispense ? (
               <>

@@ -5,6 +5,7 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import POST from '../../protocol';
 import STORE from '../../storage';
 import * as navigate from '../../navigator/RootNavigation';
+import storage from '../../storage';
 
 const InputServiceMode = ({login}) => {
   const [numInput, setNumInput] = React.useState('');
@@ -23,30 +24,29 @@ const InputServiceMode = ({login}) => {
   };
 
   const onEnter = () => {
+    // setTextError(false);
+    // if (String(numInput) === '000000') {
+    //   login();
+    // } else {
+    //   setTextError(true);
+    // }
     setTextError(false);
-    if (String(numInput) === '000000') {
-      login();
-    } else {
-      setTextError(true);
-    }
-    // STORE.getItem('TOKEN', response => {
-    //   if (response.result) {
-    //     POST.postJson('loginServiceMode', {pin: String(numInput)}, res => {
-    //       console.log(res);
-    //       if (res.result) {
-    //         login();
-    //       } else {
-    //         setTextError(true);
-    //       }
-    //     });
-    //   } else {
-    //     if (String(numInput) === '000000') {
-    //       login();
-    //     } else {
-    //       setTextError(true);
-    //     }
-    //   }
-    // });
+    storage.getItem('PIN', res => {
+      if (res.result) {
+        if (res.data === numInput) {
+          login();
+          navigate.navigate('Setting');
+        } else {
+          setTextError(true);
+        }
+      } else {
+        if (String(numInput) === '000000') {
+          login();
+        } else {
+          setTextError(true);
+        }
+      }
+    });
   };
 
   return (
