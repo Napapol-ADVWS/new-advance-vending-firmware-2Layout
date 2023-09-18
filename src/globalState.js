@@ -201,3 +201,8 @@ export const videoReady = atom({
   key: 'videoReady',
   default: false,
 });
+
+export const motorDisplay = atom({
+  key: 'motorDisplay',
+  default: [],
+});

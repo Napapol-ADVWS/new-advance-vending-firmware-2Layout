@@ -1,6 +1,7 @@
 // V.2.6.0
 
 import RNSerialport from 'react-native-serial-port-api';
+import G from './src/globalVar';
 
 var Buffer = require('buffer/').Buffer;
 const vmcCmd = require('./vmc');
@@ -531,6 +532,10 @@ function decodeMessage(buffer) {
               event_name_waiting('temperaturecontrollerstatus', d);
           } else if (decode.commandType == '38') {
             console.log('decode 38 ==>', decode);
+            G.testMotor.push({
+              status: decode.status,
+              statusText: decode.statusText,
+            });
             let d = {
               result: decode.status == '00' ? true : false,
               title: decode.title,
