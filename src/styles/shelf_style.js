@@ -165,7 +165,7 @@ export const Styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 3,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 0,
   },
   product_price: {
     fontSize: 50,
@@ -186,7 +186,7 @@ export const Styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 3,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 0,
   },
   product_promotion: {
     fontSize: 50,

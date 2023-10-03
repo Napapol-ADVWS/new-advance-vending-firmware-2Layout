@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as RN from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Styles} from '../../styles/shelf_style';
+import moment from 'moment';
 
 let nextPage = 0;
 let oldPage = 2980;
@@ -74,6 +75,20 @@ export default class Prodshelf extends React.Component {
     }
   };
 
+  checkExp = exp => {
+    let expDate = exp - Number(moment().unix());
+    expDate = expDate / 3600;
+    expDate = expDate / 24;
+    expDate = (expDate / 5) * 100;
+    if (expDate > 50) {
+      return 'rgba(88, 204, 12, 0.8)';
+    } else if (expDate < 50) {
+      return 'rgba(255, 187, 40, 0.8)';
+    } else if (expDate < 20) {
+      return 'rgba(255, 36, 0, 0.8)';
+    }
+  };
+
   onSelectProd = item => {
     clearInterval(this.activeInterval);
     this.setState({selectProduct: true});
@@ -109,6 +124,18 @@ export default class Prodshelf extends React.Component {
           <RN.Text style={Styles.product_text_ribbon}>SALE</RN.Text>
         </>
       )}
+      <RN.Text
+        style={{
+          fontSize: 18,
+          textAlign: 'center',
+          fontWeight: 'bold',
+          color: '#fff',
+          backgroundColor: this.checkExp(item.expireDate),
+          padding: 5,
+          borderRadius: 5,
+        }}>
+        {item.expireMsg}
+      </RN.Text>
       <RN.ProgressBarAndroid
         styleAttr="Horizontal"
         animating={true}
