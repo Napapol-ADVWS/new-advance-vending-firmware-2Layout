@@ -19,6 +19,8 @@ import ProductRanking from '../components/shelf/ProductRanking';
 import ShelfTimeout from '../components/shelf/shelfTimeout';
 import BlinkView from '../components/payment/BlinkView';
 import G from '../globalVar';
+import MemberInput from '../components/shelf/MemberInput';
+import MemberSuccess from '../components/shelf/MemberSuccess';
 let timeout = 60;
 let nextPage = 0;
 let onScrollTime;
@@ -33,9 +35,11 @@ export default function Shelf() {
   const [onSelect, setOnSelect] = React.useState(false);
   const [isScrollShelf, setIsScrollShelf] = React.useState(false);
   const [PICKPROD, setPICKPROD] = React.useState(false);
+  const [memberBox, setMemberBox] = React.useState(false);
 
   const [CHANGE_MONEY] = useRecoilState(GOLBAL.CHANGE_MONEY);
   const [TRAN_SUCCESS] = useRecoilState(GOLBAL.TRAN_SUCCESS);
+  const [MEMBER_SUCCESS] = useRecoilState(GOLBAL.MEMBER_SUCCESS);
   const [categoryData] = useRecoilState(GOLBAL.category);
   const [inventory] = useRecoilState(GOLBAL.inventory);
   const [inventoryAll] = useRecoilState(GOLBAL.inventoryAll);
@@ -125,6 +129,10 @@ export default function Shelf() {
 
   const closeSetting = () => {
     setSetting(false);
+  };
+
+  const closeMember = () => {
+    setMemberBox(false);
   };
 
   const closeProductRanking = () => {
@@ -264,6 +272,12 @@ export default function Shelf() {
       </Modal>
       <Modal isVisible={setting}>
         <StaffMode dismiss={closeSetting} />
+      </Modal>
+      <Modal isVisible={memberBox}>
+        <MemberInput dismiss={closeMember} />
+      </Modal>
+      <Modal isVisible={MEMBER_SUCCESS}>
+        <MemberSuccess />
       </Modal>
       <Modal isVisible={isRank}>
         <ProductRanking

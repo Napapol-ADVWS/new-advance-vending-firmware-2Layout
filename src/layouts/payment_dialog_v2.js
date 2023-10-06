@@ -19,6 +19,7 @@ import QRPaymentScreen from './qr_payment_fragment';
 import CardPaymentScreen from './card_payment_fragment';
 import G from '../globalVar';
 import PaymentButton from '../components/payment/paymentButton';
+import PointPaymentScreen from './point_payment_fragment';
 
 var timeout = 10;
 var countProd = 1;
@@ -28,6 +29,7 @@ const PaymentV2 = ({dismiss, prod}) => {
   const [selectCash, setSelectCash] = React.useState(false);
   const [selectQr, setSelectQr] = React.useState(false);
   const [selectCard, setSelectCard] = React.useState(false);
+  const [selectPoint, setSelectPoint] = React.useState(false);
   const [stopTimeout, setStopTimeout] = React.useState(false);
   const [tranID, setTranID] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -181,6 +183,13 @@ const PaymentV2 = ({dismiss, prod}) => {
     }
   };
 
+  const onSelectMember = () => {
+    setSelectQr(false);
+    setSelectCash(false);
+    setSelectCard(false);
+    setSelectPoint(true);
+  };
+
   const onCloseSelectPayment = () => {
     setStopTimeout(false);
     G.paymentReady = false;
@@ -279,6 +288,7 @@ const PaymentV2 = ({dismiss, prod}) => {
             <PaymentButton
               selectQrType={onSelectQr}
               onSelectCash={onSelectCash}
+              selectMemberType={onSelectMember}
               product={product}
             />
             <PaymentTimeout
@@ -341,6 +351,15 @@ const PaymentV2 = ({dismiss, prod}) => {
               product={product}
               transaction={tranID}
               updateTransaction={updateTransaction}
+            />
+          </RN.View>
+        )}
+        {selectPoint && (
+          <RN.View style={Styles.w100}>
+            <PointPaymentScreen
+            // product={product}
+            // transaction={tranID}
+            // updateTransaction={updateTransaction}
             />
           </RN.View>
         )}

@@ -11,6 +11,16 @@ export const TRAN_SUCCESS = atom({
   default: false,
 });
 
+export const MEMBER_EARN = atom({
+  key: 'MEMBER_EARN',
+  default: false,
+});
+
+export const MEMBER_SUCCESS = atom({
+  key: 'MEMBER_SUCCESS',
+  default: false,
+});
+
 export const TRAN_FAIL = atom({
   key: 'TRAN_FAIL',
   default: false,

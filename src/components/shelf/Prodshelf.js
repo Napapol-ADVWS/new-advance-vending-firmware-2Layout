@@ -124,18 +124,20 @@ export default class Prodshelf extends React.Component {
           <RN.Text style={Styles.product_text_ribbon}>SALE</RN.Text>
         </>
       )}
-      <RN.Text
-        style={{
-          fontSize: 18,
-          textAlign: 'center',
-          fontWeight: 'bold',
-          color: '#fff',
-          backgroundColor: this.checkExp(item.expireDate),
-          padding: 5,
-          borderRadius: 5,
-        }}>
-        {item.expireMsg}
-      </RN.Text>
+      {item.expireMsg && (
+        <RN.Text
+          style={{
+            fontSize: 18,
+            textAlign: 'center',
+            fontWeight: 'bold',
+            color: '#fff',
+            backgroundColor: this.checkExp(item.expireDate),
+            padding: 5,
+            borderRadius: 5,
+          }}>
+          {item.expireMsg}
+        </RN.Text>
+      )}
       <RN.ProgressBarAndroid
         styleAttr="Horizontal"
         animating={true}

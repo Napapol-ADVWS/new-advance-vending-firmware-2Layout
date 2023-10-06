@@ -51,6 +51,16 @@ const PaymentButton = ({selectQrType, onSelectCash, product}) => {
           color: '#fff',
         };
         methods.push(obj);
+      } else if (item.type == 'e-member') {
+        let obj = {
+          _id: item._id,
+          active: false,
+          logo_image: require('../../../assets/images/e_member_point.png'),
+          name: 'Member Point',
+          type: item.type,
+          color: '#fff',
+        };
+        methods.push(obj);
       } else if (item.type === 'other' && item.active === 1) {
         methods.push(item);
       }
