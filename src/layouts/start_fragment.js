@@ -152,7 +152,7 @@ export default function StartScreen() {
       String(optionsMqtt.kiosk),
       optionsMqtt.subscribe,
       optionsMqtt.publish,
-      callback => {
+      async callback => {
         console.log('MQTT callback::', callback);
         switch (callback.cmd) {
           case 'restart_app':
@@ -214,8 +214,23 @@ export default function StartScreen() {
             G.QRPaymentResult = callback.result;
             break;
           case 'clear_jammed':
-            maincontroll.clearselectionjammed('clear'); // No need to wait result
-            console.log('clear jammed');
+            const callbackClearJammed = await maincontroll.clearselectionjammed(
+              'clear',
+            ); // No need to wait result
+            const callbackClearMotor = await maincontroll.clearmotorerror(
+              'clear',
+            );
+            const callbackClearLift = await maincontroll.clearlifterror(
+              'setting',
+            );
+            console.log(
+              'clear jammed:',
+              callbackClearJammed,
+              'clear motor:',
+              callbackClearMotor,
+              'clear lift:',
+              callbackClearLift,
+            );
             break;
           case 'close_cash_payment':
             console.log('APP CLOSE CASH');
