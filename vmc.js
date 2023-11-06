@@ -346,6 +346,9 @@ function defineStatus(data) {
     data.temperature = txt.substring(s, (s += 2));
     data.temperatureText =
       data.temperature != '' ? vmcCmd.base10(data.temperature) : '';
+    if (Number(data.temperatureText) > 100) {
+      data.temperatureText = Number(data.temperatureText) - 256;
+    }
     data.doorStatus = txt.substring(s, (s += 2));
     data.doorStatusText = data.doorStatus == '00' ? 'close' : 'open';
     data.billChange = txt.substring(s, (s += 8));
@@ -636,6 +639,37 @@ function defineStatusM(data) {
         : data.temperaturecontrollerstatus == '07'
         ? 'Temperature sensor error'
         : 'Unknown';
+  } else if (data.commandType == '37') {
+    data.title = 'Temperature Controller Parameters Setting';
+    if (data.operationType == '00') {
+      data.status = txt.substring(s, (s += 2));
+      data.statusText =
+        data.status == '00'
+          ? 'Read successfully'
+          : data.status == '01'
+          ? 'Slave machine communication error'
+          : 'Unknown';
+      data.lowesttemperature = vmcCmd.base10(txt.substring(s, (s += 2)));
+      data.highesttemperature = vmcCmd.base10(txt.substring(s, (s += 2)));
+      data.returndifferencevalue = vmcCmd.base10(txt.substring(s, (s += 2)));
+      data.delaystartingtime = vmcCmd.base10(txt.substring(s, (s += 2)));
+      data.sensorcorrection = vmcCmd.base10(txt.substring(s, (s += 2)));
+      if (Number(data.sensorcorrection) > 100)
+        data.sensorcorrection = Number(data.sensorcorrection) - 255;
+      data.defrostingperiod = vmcCmd.base10(txt.substring(s, (s += 2)));
+      data.defrostingtime = vmcCmd.base10(txt.substring(s, (s += 2)));
+      data.protect = txt.substring(s);
+      data.protectText =
+        data.protect == '01' ? 'ON' : data.protect == '00' ? 'OFF' : 'unknown';
+    } else {
+      data.status = txt.substring(s, (s += 2));
+      data.statusText =
+        data.status == '00'
+          ? 'Set successfully'
+          : data.status == '01'
+          ? 'Slave machine communication error'
+          : 'Unknown';
+    }
   } else if (data.commandType == '38') {
     data.title = 'Selection Test';
     data.status = txt.substring(s, (s += 2));
@@ -808,6 +842,38 @@ function defineStatusM(data) {
           ? 'Failed'
           : 'Unknown';
     }
+  } else if (data.commandType == '57') {
+    data.title = 'Mechanism Function Test on Box Lunch Machine';
+    data.status = txt.substring(s, (s += 2));
+    data.statusText =
+      data.status == '00'
+        ? 'Successfully'
+        : data.status == '01'
+        ? 'Failed'
+        : 'Unknown';
+  } else if (data.commandType == '58') {
+    data.title = 'Lunch Box Machine Test';
+    data.status = '00';
+    data.statusText = 'ok';
+    data.testresult = txt.substring(s, (s += 2));
+    data.testresultText =
+      data.testresult == '00'
+        ? 'Normal'
+        : data.testresult == '01'
+        ? 'Lift overload'
+        : data.testresult == '02'
+        ? 'Main Motor overload'
+        : data.testresult == '03'
+        ? 'Translation motor overload'
+        : data.testresult == '04'
+        ? 'Back door open error'
+        : data.testresult == '05'
+        ? 'Back door close error'
+        : data.testresult == '06'
+        ? 'Front door open error'
+        : data.testresult == '07'
+        ? 'Front door close error'
+        : 'Unknown';
   } else if (data.commandType == '60') {
     data.title = 'Connecting Temperature Controller';
     if (data.operationType == '00') {

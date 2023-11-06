@@ -798,15 +798,50 @@ maincontroll.setcoinaccept = async accept => {
 };
 
 maincontroll.setbillaccept = async accept => {
-  let d = {
-    e: 'setbillaccept',
-    cmd: '28',
-    text: `00${accept ? 'ffff' : '0000'}`,
-    ts: Math.floor(Number(new Date())),
-  };
-  if (accept == true) {
-    d.cmd = '70';
-    d.text = '1801' + vmcCmd.base16(10, 2);
+  if (G.blockBill == 1) {
+    console.log('setbillaccept open all');
+    var d = {
+      e: 'setbillaccept',
+      cmd: '28',
+      text: `00${accept ? 'ffff' : '0000'}`,
+      ts: Math.floor(Number(new Date())),
+    };
+  } else if (G.blockBill == 2) {
+    console.log('setbillaccept block 100 500 1000');
+    var d = {
+      e: 'setbillaccept',
+      cmd: '28',
+      text: `00${accept ? 'ffff' : '0000'}`,
+      ts: Math.floor(Number(new Date())),
+    };
+    if (accept == true) {
+      d.cmd = '70';
+      d.text = '1801' + vmcCmd.base16(1, 2);
+    }
+  } else if (G.blockBill == 3) {
+    console.log('setbillaccept block 500 1000');
+    var d = {
+      e: 'setbillaccept',
+      cmd: '28',
+      text: `00${accept ? 'ffff' : '0000'}`,
+      ts: Math.floor(Number(new Date())),
+    };
+    if (accept == true) {
+      d.cmd = '70';
+      d.text = '1801' + vmcCmd.base16(10, 2);
+    }
+  } else if (G.blockBill == 4) {
+    console.log('setbillaccept block 1000');
+    var d = {
+      e: 'setbillaccept',
+      cmd: '28',
+      text: `00${accept ? 'ff0f' : '0000'}`,
+      ts: Math.floor(Number(new Date())),
+    };
+    // if(accept == true){
+    //   d.cmd = '70';
+    //   d.text = '1801' +vmcCmd.base16(10,2);
+    // }
   }
 
   const vmcact = await sendAndWait(d);

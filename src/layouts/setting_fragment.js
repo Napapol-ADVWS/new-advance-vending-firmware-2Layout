@@ -21,6 +21,7 @@ import LiftTest from '../components/setting/liftTest';
 import RNFS from 'react-native-fs';
 import G from '../globalVar';
 import PinSetting from '../components/setting/pinSetting';
+import SettingBill from '../components/setting/settingBill';
 
 const Setting = () => {
   const [kioskID, setKioskID] = React.useState('');
@@ -182,6 +183,7 @@ const Setting = () => {
           <CoinBillVaildator />
           {/* <GiveChange /> */}
           <DispenseProd />
+          <SettingBill />
           <RN.View style={{flexDirection: 'row', width: '100%'}}>
             <ClearJammed />
             <ClearMotor />

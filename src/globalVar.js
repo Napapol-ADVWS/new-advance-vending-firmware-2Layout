@@ -24,5 +24,6 @@ const data = {
   videoReady: false,
   countMotor: 1,
   testMotor: [],
+  blockBill: 1,
 };
 module.exports = data;
