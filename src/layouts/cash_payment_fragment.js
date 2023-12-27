@@ -395,7 +395,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
       <RN.View style={[Styles.container]}>
         <>
           <RN.View style={[Styles.title_content]}>
-            <RN.Text style={Styles.title_text}>กรุณายอดเงินสดตามจำนวน</RN.Text>
+            <RN.Text style={Styles.title_text}>กรุณาหยอดเงินสดตามจำนวน</RN.Text>
           </RN.View>
           <RN.View style={Styles.input_money_container}>
             {LoadDispense ? (

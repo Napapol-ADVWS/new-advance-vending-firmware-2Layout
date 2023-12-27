@@ -243,9 +243,9 @@ export default function Shelf() {
         {/* <RN.TouchableOpacity style={Styles.btn_topup_content}>
           <RN.Text>Topup Button</RN.Text>
         </RN.TouchableOpacity> */}
-        {/* {!onSelect && !isScrollShelf && (
+        {!onSelect && !isScrollShelf && (
           <ShelfTimeout onTimeout={timeoutScreenSaver} />
-        )} */}
+        )}
       </LinearGradient>
       <Modal
         isVisible={payment}
