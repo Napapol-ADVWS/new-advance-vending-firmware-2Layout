@@ -63,6 +63,16 @@ const PaymentButton = ({selectQrType, onSelectCash, product}) => {
         methods.push(obj);
       } else if (item.type === 'other' && item.active === 1) {
         methods.push(item);
+      } else if (item.type == 'true' && item.active == 1) {
+        let obj = {
+          _id: item._id,
+          active: false,
+          logo_image: require('../../../assets/images/true_wallet_logo.png'),
+          name: 'True Wallet',
+          type: item.type,
+          color: '#fff',
+        };
+        methods.push(obj)
       }
     });
     setQrMethod(methods);

@@ -39,7 +39,7 @@ const PaymentV2 = ({dismiss, prod}) => {
   const [sumTotal, setSumTotal] = React.useState(
     product.price.sale > 0 ? product.price.sale : product.price.normal,
   );
-
+  const [paymentType, setPaymentType] = React.useState(false)
   const [cashStatus] = useRecoilState(GOLBAL.cash_method);
   const TRAN_SUCCESS = useSetRecoilState(GOLBAL.TRAN_SUCCESS);
   const [mqttClient] = useRecoilState(GOLBAL.mqttClient);
@@ -91,12 +91,13 @@ const PaymentV2 = ({dismiss, prod}) => {
         //stopIntervalMaketrans();
         timeout = 10;
         setLoading(false);
+        setPaymentType(type)
         if (type === 'Cash') {
           setTranID(data.transactionID);
           setSelectQr(false);
           setSelectCash(true);
           setSelectCard(false);
-        } else if (type === 'ThaiQR') {
+        } else if (type === 'ThaiQR' || type == 'TrueWallet') {
           setTranID(data);
           setSelectQr(true);
           setSelectCash(false);
@@ -126,7 +127,7 @@ const PaymentV2 = ({dismiss, prod}) => {
       }
     }
     console.log('POSTDATA', postdata);
-
+    setPaymentType(false)
     POST.postJson('updateTransaction', postdata, callback => {
       console.log('TRANSACTION:', callback);
     });
@@ -179,7 +180,11 @@ const PaymentV2 = ({dismiss, prod}) => {
       G.paymentReady = true;
       setSelectPay(false);
       setLoading(true);
-      handleTransaction('ThaiQR');
+      if(payType.type == 'true'){
+          handleTransaction('TrueWallet');
+      } else {
+          handleTransaction('ThaiQR');
+      }
     }
   };
 
@@ -342,6 +347,7 @@ const PaymentV2 = ({dismiss, prod}) => {
               product={product}
               transaction={tranID}
               updateTransaction={updateTransaction}
+              paymentType={paymentType}
             />
           </RN.View>
         )}

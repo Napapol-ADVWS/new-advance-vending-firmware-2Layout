@@ -11,7 +11,7 @@ import G from '../globalVar';
 const maincontroll = require('../../maincontroll');
 
 let dispenseTimeout = 0;
-const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
+const QRPaymentScreen = ({product, transaction, updateTransaction, paymentType}) => {
   const [LoadDispense, setLoadDispense] = React.useState(false);
   const [dispenseError, setDispenseError] = React.useState(false);
   const [msgError, setMsgError] = React.useState('กรุณารับเงินทอนจำนวน');
@@ -359,15 +359,22 @@ const QRPaymentScreen = ({product, transaction, updateTransaction}) => {
           <RN.View style={Styles.footerContainer}>
             {!LoadDispense ? (
               <>
-                <RN.View style={Styles.mobile_banking_container}>
-                  <RN.Image
-                    source={require('../../assets/images/mobile_banking2.png')}
-                    style={Styles.mobile_banking_image}
-                  />
-                  <RN.Text style={Styles.title_text}>
-                    กรุณาแสกน QR Payment เพื่อชำระสินค้า
-                  </RN.Text>
-                </RN.View>
+                {paymentType == 'ThaiQR'&&
+                  <RN.View style={Styles.mobile_banking_container}>
+                    <RN.Image
+                      source={require('../../assets/images/mobile_banking2.png')}
+                      style={Styles.mobile_banking_image}
+                    />
+                  </RN.View>
+                }
+                {paymentType == 'TrueWallet'&&
+                  <RN.View style={Styles.mobile_banking_container}>
+                    <RN.Image
+                      source={require('../../assets/images/true_wallet_logo.png')}
+                      style={[Styles.mobile_banking_image, {marginTop: 20}]}
+                    />
+                  </RN.View>
+                }
               </>
             ) : (
               <>
