@@ -8,6 +8,8 @@ import {Styles} from '../styles/cash_style';
 import ERR from '../msgError';
 import Script from '../script';
 import G from '../globalVar';
+import {useRecoilState, useSetRecoilState} from 'recoil';
+import * as GOLBAL from '../globalState';
 
 const maincontroll = require('../../maincontroll');
 
@@ -24,6 +26,8 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
   const [vendingStatus, setVendingStatus] = React.useState('');
   const [disableCancel, setDisableCancel] = React.useState(false);
   const [showCancel, setShowCancel] = React.useState(false);
+
+  const [blockRefundMoney] = useRecoilState(GOLBAL.blockRefundMoney);
 
   let moneyInput = {coin: 0, bill: 0, total: 0};
   let firstload = false;
@@ -343,11 +347,17 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
     };
     console.log('amount inputMoney', inputMoney);
     if (Number(inputMoney > 0)) {
-      const givechange = await maincontroll.givechange(Number(inputMoney));
-      const coinStack = await Script.checkCoinStack();
-      postdata.payment.coinStack = coinStack;
-      console.log('refundMoney=>', givechange);
-      inputMoney = 0;
+      if (!blockRefundMoney) {
+        const givechange = await maincontroll.givechange(Number(inputMoney));
+        const coinStack = await Script.checkCoinStack();
+        postdata.payment.coinStack = coinStack;
+        console.log('refundMoney=>', givechange);
+        inputMoney = 0;
+      } else {
+        const coinStack = await Script.checkCoinStack();
+        postdata.payment.coinStack = coinStack;
+        inputMoney = 0;
+      }
       console.log('data update transaction', postdata);
       updateTransaction(postdata, 'cancel', action);
     } else {

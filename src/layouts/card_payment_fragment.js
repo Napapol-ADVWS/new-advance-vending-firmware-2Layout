@@ -7,6 +7,8 @@ import {BarIndicator} from 'react-native-indicators';
 import ERR from '../msgError';
 import moment from 'moment';
 import G from '../globalVar';
+import {useRecoilState, useSetRecoilState} from 'recoil';
+import * as GOLBAL from '../globalState';
 
 const maincontroll = require('../../maincontroll');
 let dispenseTimeout = 0;
@@ -21,6 +23,8 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
   const [disableCancel, setDisableCancel] = React.useState(false);
   const [loadTran, setLoadTran] = React.useState(true);
   const [QrPayment, setQrPayment] = React.useState('data:image/png;base64,');
+
+  const [blockRefundMoney] = useRecoilState(GOLBAL.blockRefundMoney);
 
   let moneyInput = {coin: 0, bill: 0, total: 0};
   let firstload = false;
@@ -257,13 +261,15 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
       transactionID: transaction.transactionID,
       kioskStatus: {msg: msg, code: codeStatus},
     };
-    setRefundMoneyStatus(true);
-    let refund =
-      product.price.sale > 0 ? product.price.sale : product.price.normal;
-    console.log('amount refund', refund);
-    setMoneyRefund(refund);
-    const givechange = await maincontroll.givechange(Number(refund));
-    console.log('refundMoney=>', givechange);
+    if (!blockRefundMoney) {
+      setRefundMoneyStatus(true);
+      let refund =
+        product.price.sale > 0 ? product.price.sale : product.price.normal;
+      console.log('amount refund', refund);
+      setMoneyRefund(refund);
+      const givechange = await maincontroll.givechange(Number(refund));
+      console.log('refundMoney=>', givechange);
+    }
     updateTransaction(postdata, 'cancel', action);
   };
 

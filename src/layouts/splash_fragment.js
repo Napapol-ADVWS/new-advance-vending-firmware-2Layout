@@ -32,6 +32,7 @@ export default function Splash() {
         temperature: G.temperature,
         ping: G.pingMS,
         testping: true,
+        blockRefund: G.blockRefundMoney,
       };
       console.log('checkin:::', payload);
       MQTTConnection.publicCheckin(G.mqttClient, payload);

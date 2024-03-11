@@ -216,3 +216,8 @@ export const motorDisplay = atom({
   key: 'motorDisplay',
   default: [],
 });
+
+export const blockRefundMoney = atom({
+  key: 'blockRefundMoney',
+  default: false,
+});

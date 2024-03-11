@@ -3,10 +3,14 @@ import * as RN from 'react-native';
 import G from '../../globalVar';
 import {Styles} from '../../styles/settingbill_style';
 import STORE from '../../storage';
+import {useRecoilState, useSetRecoilState} from 'recoil';
+import * as GLOBAL from '../../globalState';
 const maincontroll = require('../../../maincontroll');
 
 const SettingBill = () => {
   const [msgSetting, setMsgSetting] = React.useState('เปิดทั้งหมด');
+  const [blockRefundMoney] = useRecoilState(GLOBAL.blockRefundMoney);
+  const setBlockRefundMoney = useSetRecoilState(GLOBAL.blockRefundMoney);
 
   React.useEffect(() => {
     if (G.blockBill == 1) {
@@ -59,6 +63,13 @@ const SettingBill = () => {
     }
   };
 
+  const onSaveBlockRefund = req => {
+    STORE.setItem('BLOCKREFUND', req, response => {
+      G.blockRefundMoney = req;
+      setBlockRefundMoney(req);
+    });
+  };
+
   return (
     <>
       <RN.View style={Styles.contaniner}>
@@ -106,6 +117,33 @@ const SettingBill = () => {
         คำสั่งที่เลือก :{' '}
         <RN.Text style={{color: '#56ab2f'}}>{msgSetting}</RN.Text>
       </RN.Text>
+      <RN.View
+        style={{
+          width: '100%',
+          marginTop: '3%',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <RN.Text
+          style={{
+            color: '#000',
+            fontWeight: 'bold',
+            fontSize: 22,
+            marginLeft: 40,
+          }}>
+          การคืนเงิน :{' '}
+        </RN.Text>
+        <RN.TouchableOpacity
+          style={[
+            Styles.btn_setbill_content,
+            {backgroundColor: !blockRefundMoney ? 'green' : 'red'},
+          ]}
+          onPress={() => onSaveBlockRefund(!blockRefundMoney ? true : false)}>
+          <RN.Text style={{color: '#fff', fontWeight: 'bold', fontSize: 18}}>
+            {!blockRefundMoney ? 'เปิด' : 'ปิด'}
+          </RN.Text>
+        </RN.TouchableOpacity>
+      </RN.View>
     </>
   );
 };

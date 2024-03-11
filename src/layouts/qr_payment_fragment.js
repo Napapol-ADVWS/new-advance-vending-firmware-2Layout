@@ -7,11 +7,18 @@ import {BarIndicator} from 'react-native-indicators';
 import ERR from '../msgError';
 import moment from 'moment';
 import G from '../globalVar';
+import {useRecoilState, useSetRecoilState} from 'recoil';
+import * as GOLBAL from '../globalState';
 
 const maincontroll = require('../../maincontroll');
 
 let dispenseTimeout = 0;
-const QRPaymentScreen = ({product, transaction, updateTransaction, paymentType}) => {
+const QRPaymentScreen = ({
+  product,
+  transaction,
+  updateTransaction,
+  paymentType,
+}) => {
   const [LoadDispense, setLoadDispense] = React.useState(false);
   const [dispenseError, setDispenseError] = React.useState(false);
   const [msgError, setMsgError] = React.useState('กรุณารับเงินทอนจำนวน');
@@ -22,6 +29,8 @@ const QRPaymentScreen = ({product, transaction, updateTransaction, paymentType})
   const [disableCancel, setDisableCancel] = React.useState(false);
   const [loadTran, setLoadTran] = React.useState(true);
   const [QrPayment, setQrPayment] = React.useState('data:image/png;base64,');
+
+  const [blockRefundMoney] = useRecoilState(GOLBAL.blockRefundMoney);
 
   let moneyInput = {coin: 0, bill: 0, total: 0};
   let firstload = false;
@@ -263,13 +272,15 @@ const QRPaymentScreen = ({product, transaction, updateTransaction, paymentType})
       transactionID: transaction.transactionID,
       kioskStatus: {msg: msg, code: codeStatus},
     };
-    setRefundMoneyStatus(true);
-    let refund =
-      product.price.sale > 0 ? product.price.sale : product.price.normal;
-    console.log('amount refund', refund);
-    setMoneyRefund(refund);
-    const givechange = await maincontroll.givechange(Number(refund));
-    console.log('refundMoney=>', givechange);
+    if (!blockRefundMoney) {
+      setRefundMoneyStatus(true);
+      let refund =
+        product.price.sale > 0 ? product.price.sale : product.price.normal;
+      console.log('amount refund', refund);
+      setMoneyRefund(refund);
+      const givechange = await maincontroll.givechange(Number(refund));
+      console.log('refundMoney=>', givechange);
+    }
     updateTransaction(postdata, 'cancel', action);
   };
 
@@ -359,22 +370,22 @@ const QRPaymentScreen = ({product, transaction, updateTransaction, paymentType})
           <RN.View style={Styles.footerContainer}>
             {!LoadDispense ? (
               <>
-                {paymentType == 'ThaiQR'&&
+                {paymentType == 'ThaiQR' && (
                   <RN.View style={Styles.mobile_banking_container}>
                     <RN.Image
                       source={require('../../assets/images/mobile_banking2.png')}
                       style={Styles.mobile_banking_image}
                     />
                   </RN.View>
-                }
-                {paymentType == 'TrueWallet'&&
+                )}
+                {paymentType == 'TrueWallet' && (
                   <RN.View style={Styles.mobile_banking_container}>
                     <RN.Image
                       source={require('../../assets/images/true_wallet_logo.png')}
                       style={[Styles.mobile_banking_image, {marginTop: 20}]}
                     />
                   </RN.View>
-                }
+                )}
               </>
             ) : (
               <>

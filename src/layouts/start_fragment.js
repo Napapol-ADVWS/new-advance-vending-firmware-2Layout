@@ -33,29 +33,36 @@ export default function StartScreen() {
   const pickupDoor = useSetRecoilState(GLOBAL.pickupDoor);
   const temperature = useSetRecoilState(GLOBAL.temperature);
   const videoReady = useSetRecoilState(GLOBAL.videoReady);
+  const blockRefundMoney = useSetRecoilState(GLOBAL.blockRefundMoney);
 
   React.useEffect(() => {
     runApp();
   }, []);
 
   const runApp = () => {
-    Script.vendingStatus(productInsideElevator, pickupDoor, temperature);
-    getKisokData(res => {
-      console.log('START:::', res);
-      if (res) {
-        if (isInventory.length <= 0 && isPaymentMethod.length <= 0) {
-          setIsLoading(30);
-          console.log(optionsMqtt);
-          checkToken();
+    STORE.getItem('BLOCKREFUND', call => {
+      setIsLoading(10);
+      console.log('BLOCKREFUND===>', call, typeof call.data);
+      G.blockRefundMoney = call.data;
+      blockRefundMoney(call.data);
+      Script.vendingStatus(productInsideElevator, pickupDoor, temperature);
+      getKisokData(res => {
+        console.log('START:::', res);
+        if (res) {
+          if (isInventory.length <= 0 && isPaymentMethod.length <= 0) {
+            setIsLoading(30);
+            console.log(optionsMqtt);
+            checkToken();
+          } else {
+            console.log('isInventory:', isInventory);
+            console.log('isPaymentMethod:', isPaymentMethod);
+            setIsLoading(100);
+          }
         } else {
-          console.log('isInventory:', isInventory);
-          console.log('isPaymentMethod:', isPaymentMethod);
           setIsLoading(100);
+          navigate.navigate('Setting');
         }
-      } else {
-        setIsLoading(100);
-        navigate.navigate('Setting');
-      }
+      });
     });
   };
 

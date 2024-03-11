@@ -17,7 +17,7 @@ const data = {
   decodeToken: {},
   QRPaymentResult: {},
   paymentReady: false,
-  VERSION: '3.0.7-C',
+  VERSION: '3.0.8-C',
   coinStack: {C1: 0, C2: 0, C5: 0, C10: 0},
   startSuccess: false,
   PaymentSuccess: false,
@@ -25,5 +25,6 @@ const data = {
   countMotor: 1,
   testMotor: [],
   blockBill: 1,
+  blockRefundMoney: false,
 };
 module.exports = data;
