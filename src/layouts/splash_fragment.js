@@ -34,7 +34,7 @@ export default function Splash() {
         testping: true,
         blockRefund: G.blockRefundMoney,
       };
-      console.log('checkin:::', payload);
+      //console.log('checkin:::', payload);
       MQTTConnection.publicCheckin(G.mqttClient, payload);
     }, 30000);
 
