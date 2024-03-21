@@ -46,10 +46,10 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
         clearTimeout(time_counter);
       };
     }
-    time_counter = setTimeout(() => {
-      setTimer(prevCount => prevCount - 1);
-      console.log('timer card : ', timer);
-    }, 1000);
+    // time_counter = setTimeout(() => {
+    //   setTimer(prevCount => prevCount - 1);
+    //   console.log('timer card : ', timer);
+    // }, 1000);
     return () => {
       clearTimeout(time_counter);
     };
@@ -309,34 +309,49 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
     <RN.View style={[Styles.body_container]}>
       <RN.View style={Styles.container}>
         <>
-          <RN.View style={Styles.timer_content}>
-            <RN.Text style={Styles.timer_title_text}>Payment Time</RN.Text>
-            <RN.Text style={Styles.timer_text}>
-              {moment.unix(timer).format('mm:ss')}
-            </RN.Text>
-          </RN.View>
+          <RN.Text style={Styles.title_text}>
+            กรุณาสแกน QR Payment เพื่อชำระสินค้า
+          </RN.Text>
           <RN.View style={Styles.input_money_container}>
             {LoadDispense ? (
               <>
                 {dispenseError ? (
-                  <RN.View style={{bottom: 30, height: 250}}>
-                    <RN.Image
-                      source={require('../../assets/images/vending_error.png')}
-                      style={Styles.vending_error_image}
-                    />
-                  </RN.View>
+                  <>
+                    <RN.View style={{bottom: 40, height: 340}}>
+                      <RN.Image
+                        source={require('../../assets/images/vending_error.png')}
+                        style={Styles.vending_error_image}
+                      />
+                    </RN.View>
+                    <RN.View style={[Styles.w100, {alignItems: 'center'}]}>
+                      <RN.Text
+                        style={[
+                          Styles.vending_error_text,
+                          {marginTop: '-50%', fontSize: 25},
+                        ]}>
+                        {msgError}
+                      </RN.Text>
+                    </RN.View>
+                  </>
                 ) : (
-                  <RN.View
-                    style={{flexDirection: 'row', bottom: 50, height: 250}}>
-                    <RN.Image
-                      source={require('../../assets/images/vending_process2.gif')}
-                      style={Styles.vending_process_image}
-                    />
-                    <RN.Image
-                      source={require('../../assets/images/down_gif.gif')}
-                      style={Styles.down_iamge}
-                    />
-                  </RN.View>
+                  <>
+                    <RN.View
+                      style={{flexDirection: 'row', bottom: 80, height: 340}}>
+                      <RN.Image
+                        source={require('../../assets/images/vending_process2.gif')}
+                        style={Styles.vending_process_image}
+                      />
+                      <RN.Image
+                        source={require('../../assets/images/down_gif.gif')}
+                        style={Styles.down_iamge}
+                      />
+                    </RN.View>
+                    <RN.View style={[Styles.w100, {alignItems: 'center'}]}>
+                      <RN.Text style={Styles.vending_process_text}>
+                        เครื่องกำลังจ่ายของให้ท่าน ...
+                      </RN.Text>
+                    </RN.View>
+                  </>
                 )}
               </>
             ) : (
@@ -356,36 +371,19 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
               </>
             )}
           </RN.View>
+          <RN.View style={[Styles.timer_content, {marginTop: '2%'}]}>
+            <RN.Text style={Styles.timer_title_text}>Payment Time</RN.Text>
+            <RN.Text style={Styles.timer_text}>
+              {moment.unix(timer).format('mm:ss')}
+            </RN.Text>
+          </RN.View>
           <RN.View style={Styles.footerContainer}>
-            {!LoadDispense ? (
-              <>
-                <RN.View style={Styles.mobile_banking_container}>
-                  <RN.Image
-                    source={require('../../assets/images/cradit_card.png')}
-                    style={Styles.cradit_card_image}
-                  />
-                  <RN.Text style={Styles.title_text}>
-                    กรุณาแสกน QR Payment เพื่อชำระสินค้า
-                  </RN.Text>
-                </RN.View>
-              </>
-            ) : (
-              <>
-                {!dispenseError ? (
-                  <RN.View style={[Styles.w100, {alignItems: 'center'}]}>
-                    <RN.Text style={Styles.vending_process_text}>
-                      เครื่องกำลังจ่ายของให้ท่าน ...
-                    </RN.Text>
-                  </RN.View>
-                ) : (
-                  <RN.View style={[Styles.w100, {alignItems: 'center'}]}>
-                    <RN.Text style={Styles.vending_error_text}>
-                      {msgError}
-                    </RN.Text>
-                  </RN.View>
-                )}
-              </>
-            )}
+            <RN.View style={Styles.mobile_banking_container}>
+              <RN.Image
+                source={require('../../assets/images/cradit_card.png')}
+                style={Styles.cradit_card_image}
+              />
+            </RN.View>
           </RN.View>
           {!disableCancel ? (
             <RN.TouchableOpacity
@@ -395,7 +393,7 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
                 start={{x: 1, y: 0}}
                 style={Styles.btn_cancel_content}
                 colors={['#93291E', '#ED213A', '#93291E']}>
-                <RN.Text style={Styles.btn_cancel_text}>CANCEL</RN.Text>
+                <RN.Text style={Styles.btn_cancel_text}>ยกเลิก</RN.Text>
               </LinearGradient>
             </RN.TouchableOpacity>
           ) : (
@@ -404,41 +402,43 @@ const CardPaymentScreen = ({product, transaction, updateTransaction}) => {
                 start={{x: 1, y: 0}}
                 style={Styles.btn_cancel_content}
                 colors={['#ddd', '#ddd', '#ddd']}>
-                <RN.Text style={Styles.btn_cancel_text}>CANCEL</RN.Text>
+                <RN.Text style={Styles.btn_cancel_text}>ยกเลิก</RN.Text>
               </LinearGradient>
             </RN.View>
           )}
-          <RN.View style={Styles.vending_status_container}>
-            <RN.Text style={Styles.vending_status_text}>
-              สถานะตู้ : {vendingStatus}
-            </RN.Text>
-          </RN.View>
+          {!refundMoneyStatus ? (
+            <RN.View style={Styles.vending_status_container}>
+              <RN.Text style={Styles.vending_status_text}>
+                สถานะตู้ : {vendingStatus}
+              </RN.Text>
+            </RN.View>
+          ) : (
+            <RN.View style={Styles.changeMoney_container}>
+              <RN.View>
+                <RN.Text style={Styles.changeMoney_text}>
+                  กรุณารับเงินคือจำนวน{' '}
+                  <RN.Text style={Styles.change_color}>{moneyRefund}</RN.Text>{' '}
+                  บาท
+                </RN.Text>
+                <RN.Text style={Styles.changeMoney_process_text}>
+                  เครื่องกำลังคืนเงิน ...
+                </RN.Text>
+              </RN.View>
+              <RN.View style={Styles.changeMoney_image_container}>
+                <LinearGradient
+                  start={{x: 1, y: 0}}
+                  style={Styles.changeMoney_image_content}
+                  colors={['#141E30', '#243B55', '#141E30']}>
+                  <RN.Image
+                    source={require('../../assets/images/change_money.gif')}
+                    style={Styles.changeMoney_image}
+                  />
+                </LinearGradient>
+              </RN.View>
+            </RN.View>
+          )}
         </>
       </RN.View>
-      {refundMoneyStatus && (
-        <RN.View style={Styles.changeMoney_container}>
-          <RN.View>
-            <RN.Text style={Styles.changeMoney_text}>
-              กรุณารับเงินคือจำนวน{' '}
-              <RN.Text style={Styles.change_color}>{moneyRefund}</RN.Text> บาท
-            </RN.Text>
-            <RN.Text style={Styles.changeMoney_process_text}>
-              เครื่องกำลังคืนเงิน ...
-            </RN.Text>
-          </RN.View>
-          <RN.View style={Styles.changeMoney_image_container}>
-            <LinearGradient
-              start={{x: 1, y: 0}}
-              style={Styles.changeMoney_image_content}
-              colors={['#141E30', '#243B55', '#141E30']}>
-              <RN.Image
-                source={require('../../assets/images/change_money.gif')}
-                style={Styles.changeMoney_image}
-              />
-            </LinearGradient>
-          </RN.View>
-        </RN.View>
-      )}
     </RN.View>
   );
 };

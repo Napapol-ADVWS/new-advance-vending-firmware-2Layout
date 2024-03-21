@@ -10,6 +10,7 @@ import Script from '../script';
 import G from '../globalVar';
 import {useRecoilState, useSetRecoilState} from 'recoil';
 import * as GOLBAL from '../globalState';
+import moment from 'moment';
 
 const maincontroll = require('../../maincontroll');
 
@@ -495,7 +496,7 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
                 start={{x: 1, y: 0}}
                 style={Styles.btn_cancel_content}
                 colors={['#93291E', '#ED213A', '#93291E']}>
-                <RN.Text style={Styles.btn_cancel_text}>CANCEL</RN.Text>
+                <RN.Text style={Styles.btn_cancel_text}>ยกเลิก</RN.Text>
               </LinearGradient>
             </RN.TouchableOpacity>
           ) : (
@@ -504,14 +505,17 @@ const CashPaymentScreen = ({product, transactionID, updateTransaction}) => {
                 start={{x: 1, y: 0}}
                 style={Styles.btn_cancel_content}
                 colors={['#ddd', '#ddd', '#ddd']}>
-                <RN.Text style={Styles.btn_cancel_text}>CANCEL</RN.Text>
+                <RN.Text style={Styles.btn_cancel_text}>ยกเลิก</RN.Text>
               </LinearGradient>
             </RN.View>
           )}
           <RN.View style={Styles.timer_container}>
             <RN.View style={Styles.timer_content}>
               <Icon name="clock-outline" size={40} color={'#FF4B2B'} />
-              <RN.Text style={Styles.timer_text}> {timer}</RN.Text>
+              <RN.Text style={Styles.timer_text}>
+                {' '}
+                Payment time {moment.unix(timer).format('mm:ss')}
+              </RN.Text>
             </RN.View>
             <RN.View style={Styles.vending_status_container}>
               <RN.Text style={Styles.vending_status_text}>

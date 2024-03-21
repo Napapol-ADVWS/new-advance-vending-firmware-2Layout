@@ -21,6 +21,9 @@ import BlinkView from '../components/payment/BlinkView';
 import G from '../globalVar';
 import MemberInput from '../components/shelf/MemberInput';
 import MemberSuccess from '../components/shelf/MemberSuccess';
+import AdsVideo from '../components/shelf/ads_video';
+import * as Progress from 'react-native-progress';
+
 let timeout = 60;
 let nextPage = 0;
 let onScrollTime;
@@ -36,6 +39,7 @@ export default function Shelf() {
   const [isScrollShelf, setIsScrollShelf] = React.useState(false);
   const [PICKPROD, setPICKPROD] = React.useState(false);
   const [memberBox, setMemberBox] = React.useState(false);
+  const ScreenWidth = RN.Dimensions.get('window').width;
 
   const [CHANGE_MONEY] = useRecoilState(GOLBAL.CHANGE_MONEY);
   const [TRAN_SUCCESS] = useRecoilState(GOLBAL.TRAN_SUCCESS);
@@ -46,6 +50,9 @@ export default function Shelf() {
   const isSetInventory = useSetRecoilState(GOLBAL.inventory);
   const [productInsideElevator] = useRecoilState(GOLBAL.productInsideElevator);
   const [temperature] = useRecoilState(GOLBAL.temperature);
+  const [adsDownload] = useRecoilState(GOLBAL.adsDownload);
+  const [adsDownloadPer] = useRecoilState(GOLBAL.adsDownloadPer);
+  const [startDownlaod] = useRecoilState(GOLBAL.startDownlaod);
 
   React.useEffect(() => {
     runApp();
@@ -102,17 +109,21 @@ export default function Shelf() {
   };
 
   const selectProd = item => {
-    if (productInsideElevator === 'no') {
-      setProd(item);
-      setOnSelect(true);
-      console.log(onSelect);
-      setPayment(true);
-    } else {
-      setPICKPROD(true);
-      setTimeout(() => {
-        setPICKPROD(false);
-      }, 3000);
-    }
+    // if (productInsideElevator === 'no') {
+    //   setProd(item);
+    //   setOnSelect(true);
+    //   console.log(onSelect);
+    //   setPayment(true);
+    // } else {
+    //   setPICKPROD(true);
+    //   setTimeout(() => {
+    //     setPICKPROD(false);
+    //   }, 3000);
+    // }
+    setProd(item);
+    setOnSelect(true);
+    console.log(onSelect);
+    setPayment(true);
   };
 
   const cancalPayment = () => {
@@ -162,9 +173,26 @@ export default function Shelf() {
 
   return (
     <RN.View style={Styles.flex}>
+      <AdsVideo />
+      {startDownlaod && (
+        <>
+          <RN.Text
+            style={{
+              fontSize: 18,
+              color: 'red',
+              fontWeight: 'bold',
+              position: 'absolute',
+              top: 10,
+              left: 10,
+              opacity: 0.6,
+            }}>
+            Download Video {adsDownloadPer}%
+          </RN.Text>
+        </>
+      )}
       <LinearGradient
         style={Styles.topbar_container}
-        colors={['#021B79', '#2B32B2', '#021B79']}>
+        colors={['#051D72', '#051D72', '#051D72']}>
         <RN.View style={Styles.w30}>
           <RN.View style={Styles.logo_content}>
             <RN.Image
@@ -182,7 +210,7 @@ export default function Shelf() {
             style={Styles.btn_setting_vending}
             activeOpacity={1}>
             <RN.Image
-              source={require('../../assets/images/vending.png')}
+              source={require('../../assets/images/vending2.png')}
               style={Styles.vending_image}
             />
             <RN.View style={Styles.w90}>
@@ -211,7 +239,6 @@ export default function Shelf() {
         </RN.View>
       </LinearGradient>
       <RN.View style={Styles.category_conteiner}>
-        <RN.View style={Styles.w20} />
         <RN.ScrollView style={Styles.scroll_category} horizontal={true}>
           {categoryData.map(item => (
             <RN.TouchableOpacity
@@ -220,7 +247,7 @@ export default function Shelf() {
                 Styles.btn_category_content,
                 {
                   backgroundColor:
-                    categoryBtn === item._id ? '#f89400' : '#8f8f8f',
+                    categoryBtn === item._id ? '#FFC000' : '#E5E5E4',
                 },
               ]}
               onPress={() => selectCategory(item._id)}>
@@ -239,21 +266,23 @@ export default function Shelf() {
       />
       <LinearGradient
         style={Styles.footbar_container}
-        colors={['#021B79', '#2B32B2', '#021B79']}>
+        colors={['#051D72', '#051D72', '#051D72']}>
         {/* <RN.TouchableOpacity style={Styles.btn_topup_content}>
           <RN.Text>Topup Button</RN.Text>
         </RN.TouchableOpacity> */}
         {!onSelect && !isScrollShelf && (
-          <ShelfTimeout onTimeout={timeoutScreenSaver} />
+          // <ShelfTimeout onTimeout={timeoutScreenSaver} />
+          <></>
         )}
       </LinearGradient>
       <Modal
         isVisible={payment}
         style={{margin: 0, padding: 70}}
+        deviceHeight={2000}
         backdropOpacity={0.8}>
         <Payment dismiss={cancalPayment} prod={prod} />
       </Modal>
-      <Modal isVisible={CHANGE_MONEY}>
+      <Modal isVisible={CHANGE_MONEY} deviceHeight={2000}>
         <RN.View style={Styles.modal_changemoney}>
           <RN.Image
             source={require('../../assets/images/change_animation.gif')}
@@ -262,7 +291,7 @@ export default function Shelf() {
           <RN.Text style={Styles.change_text}>กรุณารับเงินถอน 0 บาท</RN.Text>
         </RN.View>
       </Modal>
-      <Modal isVisible={TRAN_SUCCESS}>
+      <Modal isVisible={TRAN_SUCCESS} deviceHeight={2000}>
         <RN.View style={Styles.modal_changemoney}>
           <RN.Image
             source={require('../../assets/images/mascos_animation.gif')}
@@ -270,22 +299,25 @@ export default function Shelf() {
           />
         </RN.View>
       </Modal>
-      <Modal isVisible={setting}>
+      <Modal isVisible={setting} deviceHeight={2000}>
         <StaffMode dismiss={closeSetting} />
       </Modal>
-      <Modal isVisible={memberBox}>
+      <Modal isVisible={memberBox} deviceHeight={2000}>
         <MemberInput dismiss={closeMember} />
       </Modal>
-      <Modal isVisible={MEMBER_SUCCESS}>
+      <Modal isVisible={MEMBER_SUCCESS} deviceHeight={2000}>
         <MemberSuccess />
       </Modal>
-      <Modal isVisible={isRank}>
+      <Modal isVisible={isRank} deviceHeight={2000}>
         <ProductRanking
           dismiss={closeProductRanking}
           onClickItemRanking={onClickItemRanking}
         />
       </Modal>
-      <Modal isVisible={PICKPROD} style={{alignItems: 'center'}}>
+      <Modal
+        isVisible={PICKPROD}
+        style={{alignItems: 'center'}}
+        deviceHeight={2000}>
         <RN.Image
           source={require('../../assets/images/lift_fail.png')}
           style={Styles.image_pickupprod}

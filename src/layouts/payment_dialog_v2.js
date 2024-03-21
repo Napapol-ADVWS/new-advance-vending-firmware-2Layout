@@ -39,7 +39,7 @@ const PaymentV2 = ({dismiss, prod}) => {
   const [sumTotal, setSumTotal] = React.useState(
     product.price.sale > 0 ? product.price.sale : product.price.normal,
   );
-  const [paymentType, setPaymentType] = React.useState(false)
+  const [paymentType, setPaymentType] = React.useState(false);
   const [cashStatus] = useRecoilState(GOLBAL.cash_method);
   const TRAN_SUCCESS = useSetRecoilState(GOLBAL.TRAN_SUCCESS);
   const [mqttClient] = useRecoilState(GOLBAL.mqttClient);
@@ -91,7 +91,7 @@ const PaymentV2 = ({dismiss, prod}) => {
         //stopIntervalMaketrans();
         timeout = 10;
         setLoading(false);
-        setPaymentType(type)
+        setPaymentType(type);
         if (type === 'Cash') {
           setTranID(data.transactionID);
           setSelectQr(false);
@@ -127,7 +127,7 @@ const PaymentV2 = ({dismiss, prod}) => {
       }
     }
     console.log('POSTDATA', postdata);
-    setPaymentType(false)
+    setPaymentType(false);
     POST.postJson('updateTransaction', postdata, callback => {
       console.log('TRANSACTION:', callback);
     });
@@ -180,10 +180,10 @@ const PaymentV2 = ({dismiss, prod}) => {
       G.paymentReady = true;
       setSelectPay(false);
       setLoading(true);
-      if(payType.type == 'true'){
-          handleTransaction('TrueWallet');
+      if (payType.type == 'true') {
+        handleTransaction('TrueWallet');
       } else {
-          handleTransaction('ThaiQR');
+        handleTransaction('ThaiQR');
       }
     }
   };
@@ -286,7 +286,7 @@ const PaymentV2 = ({dismiss, prod}) => {
           <>
             <RN.View style={Styles.paymentTitle_content}>
               <RN.Text style={Styles.payment_title_text}>
-                เลือกวิธีการชำระเงิน
+                เลือกวิธีจ่ายเงิน
               </RN.Text>
               <RN.View style={Styles.payment_line} />
             </RN.View>
@@ -308,7 +308,7 @@ const PaymentV2 = ({dismiss, prod}) => {
                 start={{x: 1, y: 0}}
                 style={Styles.btn_cancel_content}
                 colors={['#93291E', '#ED213A', '#93291E']}>
-                <RN.Text style={Styles.cancel_text}>CANCEL</RN.Text>
+                <RN.Text style={Styles.cancel_text}>ยกเลิก</RN.Text>
               </LinearGradient>
             </RN.TouchableOpacity>
           </>

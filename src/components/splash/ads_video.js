@@ -13,7 +13,6 @@ const AdsVideo = () => {
   const onBuffer = msg => {
     console.log('MSG Buffer', msg);
   };
-  console.log('My video:::', ads);
   return (
     <>
       <RN.Image

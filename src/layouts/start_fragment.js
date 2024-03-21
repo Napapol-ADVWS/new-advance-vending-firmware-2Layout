@@ -19,6 +19,7 @@ import G from '../globalVar';
 const maincontroll = require('../../maincontroll');
 let optionsMqtt = {};
 let onlyfirsttime = false;
+var checkInMQTT = false;
 export default function StartScreen() {
   const [isLoading, setIsLoading] = React.useState(0);
   const [isInventory] = useRecoilState(GLOBAL.inventory);
@@ -34,8 +35,13 @@ export default function StartScreen() {
   const temperature = useSetRecoilState(GLOBAL.temperature);
   const videoReady = useSetRecoilState(GLOBAL.videoReady);
   const blockRefundMoney = useSetRecoilState(GLOBAL.blockRefundMoney);
+  const setSignal = useSetRecoilState(GLOBAL.signals);
+  const adsDownload = useSetRecoilState(GLOBAL.adsDownload);
+  const adsDownloadPer = useSetRecoilState(GLOBAL.adsDownloadPer);
+  const startDownlaod = useSetRecoilState(GLOBAL.startDownlaod);
 
   React.useEffect(() => {
+    clearInterval(checkInMQTT);
     runApp();
   }, []);
 
@@ -199,13 +205,21 @@ export default function StartScreen() {
                 videoReady(false);
               } else {
                 console.log('setup_ads:', callback.config.ads);
-                Script.checkURLVideo(callback.config.ads, res => {
-                  console.log(res);
-                  if (res) {
-                    ads(res);
-                    videoReady(true);
-                  }
-                });
+                Script.checkURLVideo(
+                  callback.config.ads,
+                  adsDownload,
+                  adsDownloadPer,
+                  ads,
+                  videoReady,
+                  startDownlaod,
+                  res => {
+                    console.log(res);
+                    // if (res) {
+                    //   ads(res);
+                    //   videoReady(true);
+                    // }
+                  },
+                );
               }
             }
             break;
@@ -258,12 +272,31 @@ export default function StartScreen() {
 
   const checkConnectMQTT = () => {
     if (onlyfirsttime) {
-      navigate.navigate('Splash');
+      startCheckInMQTT();
+      navigate.navigate('Shelf');
     } else {
       setTimeout(() => {
         checkConnectMQTT();
       }, 3000);
     }
+  };
+
+  const startCheckInMQTT = () => {
+    checkInMQTT = setInterval(() => {
+      G.startServerData = Date.now();
+      Script.checkSignal(G.pingMS, setSignal);
+      var payload = {
+        coinStack: G.coinStack,
+        boardStatus: true,
+        mdbStatus: true,
+        temperature: G.temperature,
+        ping: G.pingMS,
+        testping: true,
+        blockRefund: G.blockRefundMoney,
+      };
+      console.log('checkin:::', payload);
+      MQTTConnection.publicCheckin(G.mqttClient, payload);
+    }, 30000);
   };
 
   return (

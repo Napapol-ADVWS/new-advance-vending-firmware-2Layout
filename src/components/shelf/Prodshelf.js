@@ -3,6 +3,8 @@ import * as RN from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Styles} from '../../styles/shelf_style';
 import moment from 'moment';
+import * as Progress from 'react-native-progress';
+import Kanit_Bold from '../../../assets/font/Kanit-Bold.ttf';
 
 let nextPage = 0;
 let oldPage = 2980;
@@ -67,11 +69,11 @@ export default class Prodshelf extends React.Component {
   checkStock = (remain, capacity) => {
     let stock = (remain * 100) / capacity;
     if (stock > 50) {
-      return '#2B32B2';
-    } else if (stock < 50) {
-      return '#e65c00';
-    } else if (stock < 20) {
+      return '#051D72';
+    } else if (stock <= 20) {
       return '#ED213A';
+    } else if (stock <= 50) {
+      return '#FF965B';
     }
   };
 
@@ -105,15 +107,43 @@ export default class Prodshelf extends React.Component {
         this.onSelectProd(item);
       }}>
       {item.productImage != 'https://noimageurl' ? (
-        <RN.Image
-          source={{uri: item.productImage}}
-          style={Styles.product_image}
-        />
+        <RN.View
+          style={{
+            width: 200,
+            height: 200,
+            marginTop: 10,
+            backgroundColor: '#fff',
+            alignItems: 'center',
+            justifyContent: 'center',
+            elevation: 2,
+            borderRadius: 20,
+            borderWidth: 2,
+            borderColor: '#E5E5E4',
+          }}>
+          <RN.Image
+            source={{uri: item.productImage}}
+            style={Styles.product_image}
+          />
+        </RN.View>
       ) : (
-        <RN.Image
-          source={require('../../../assets/images/box.png')}
-          style={Styles.product_image_not_found}
-        />
+        <RN.View
+          style={{
+            width: 200,
+            height: 200,
+            marginTop: 10,
+            backgroundColor: '#fff',
+            alignItems: 'center',
+            justifyContent: 'center',
+            elevation: 2,
+            borderRadius: 20,
+            borderWidth: 2,
+            borderColor: '#E5E5E4',
+          }}>
+          <RN.Image
+            source={require('../../../assets/images/box.png')}
+            style={Styles.product_image_not_found}
+          />
+        </RN.View>
       )}
       {item.price.sale > 0 && (
         <>
@@ -138,32 +168,44 @@ export default class Prodshelf extends React.Component {
           {item.expireMsg}
         </RN.Text>
       )}
-      <RN.ProgressBarAndroid
+      {/* <RN.ProgressBarAndroid
         styleAttr="Horizontal"
         animating={true}
         color={this.checkStock(item.allremain, item.allcapacity)}
         indeterminate={false}
         progress={item.allremain / item.allcapacity}
         style={{width: 120, marginTop: 10}}
+      /> */}
+      <Progress.Bar
+        progress={item.allremain / item.allcapacity}
+        width={180}
+        height={12}
+        color={this.checkStock(item.allremain, item.allcapacity)}
+        style={{marginTop: 20}}
       />
       <RN.Text
         style={{
-          fontSize: 18,
+          fontSize: 20,
           textAlign: 'center',
-          fontWeight: 'bold',
+          marginTop: 10,
+          fontFamily: 'Kanit-SemiBold',
           color: this.checkStock(item.allremain, item.allcapacity),
         }}>
         คงเหลือ: {item.allremain} / {item.allcapacity}
       </RN.Text>
       <RN.View style={Styles.product_name_content}>
-        <RN.Text style={Styles.product_name}>{item.productName}</RN.Text>
+        <RN.Text style={[Styles.product_name]}>
+          {item.productName.length < 40
+            ? item.productName
+            : item.productName.substring(0, 35) + '...'}
+        </RN.Text>
       </RN.View>
-      {item.price.sale > 0 ? (
+      {item.price.sale < 0 ? (
         <LinearGradient
           colors={['#dd1818', '#ED213A', '#dd1818']}
           style={Styles.product_promotion_content}>
           <RN.Text style={Styles.product_old}>{item.price.normal} ฿</RN.Text>
-          <RN.Text style={Styles.product_promotion}>
+          <RN.Text style={[Styles.product_promotion]}>
             {item.price.sale} ฿
           </RN.Text>
         </LinearGradient>
@@ -195,8 +237,8 @@ export default class Prodshelf extends React.Component {
         onScroll={e => this.handleScroll(e)}
         ref={this.refScroll}
         automaticallyAdjustContentInsets={true}
-        style={Styles.m5}
-        numColumns={3}
+        style={[Styles.m5]}
+        numColumns={4}
         data={this.props.product ? this.props.product : []}
         renderItem={item => this.renderItem(item)}
       />

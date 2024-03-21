@@ -9,6 +9,7 @@ import moment from 'moment';
 import G from '../globalVar';
 import {useRecoilState, useSetRecoilState} from 'recoil';
 import * as GOLBAL from '../globalState';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const maincontroll = require('../../maincontroll');
 
@@ -320,89 +321,112 @@ const QRPaymentScreen = ({
     <RN.View style={[Styles.body_container]}>
       <RN.View style={Styles.container}>
         <>
-          <RN.View style={Styles.timer_content}>
-            <RN.Text style={Styles.timer_title_text}>Payment Time</RN.Text>
-            <RN.Text style={Styles.timer_text}>
-              {moment.unix(timer).format('mm:ss')}
+          <RN.View style={{width: '100%', alignItems: 'center'}}>
+            <RN.Text
+              style={{
+                fontSize: 32,
+                marginTop: 30,
+                fontFamily: 'Kanit-SemiBold',
+                textAlign: 'center',
+                color: '#021B79',
+              }}>
+              กรุณาสแกนชำระเงินเพื่อชำระสินค้า
             </RN.Text>
           </RN.View>
           <RN.View style={Styles.input_money_container}>
             {LoadDispense ? (
               <>
                 {dispenseError ? (
-                  <RN.View style={{bottom: 30, height: 250}}>
+                  <RN.View style={{bottom: 30, height: 340}}>
                     <RN.Image
                       source={require('../../assets/images/vending_error.png')}
                       style={Styles.vending_error_image}
                     />
+                    <RN.View
+                      style={[
+                        Styles.w100,
+                        {alignItems: 'center', marginTop: '25%'},
+                      ]}>
+                      <RN.Text style={Styles.vending_error_text}>
+                        {msgError}
+                      </RN.Text>
+                    </RN.View>
                   </RN.View>
                 ) : (
-                  <RN.View
-                    style={{flexDirection: 'row', bottom: 50, height: 250}}>
-                    <RN.Image
-                      source={require('../../assets/images/vending_process2.gif')}
-                      style={Styles.vending_process_image}
-                    />
-                    <RN.Image
-                      source={require('../../assets/images/down_gif.gif')}
-                      style={Styles.down_iamge}
-                    />
-                  </RN.View>
+                  <>
+                    <RN.View
+                      style={{flexDirection: 'row', bottom: 80, height: 340}}>
+                      <RN.Image
+                        source={require('../../assets/images/vending_process2.gif')}
+                        style={Styles.vending_process_image}
+                      />
+                      <RN.Image
+                        source={require('../../assets/images/down_gif.gif')}
+                        style={Styles.down_iamge}
+                      />
+                    </RN.View>
+                    <RN.View style={[Styles.w100, {alignItems: 'center'}]}>
+                      <RN.Text style={Styles.vending_process_text}>
+                        เครื่องกำลังจ่ายของให้ท่าน ...
+                      </RN.Text>
+                    </RN.View>
+                  </>
                 )}
               </>
             ) : (
               <>
                 <RN.View style={Styles.qrcode_container}>
-                  <RN.View style={Styles.qrcode_content}>
-                    {loadTran ? (
+                  {loadTran ? (
+                    <RN.View
+                      style={{
+                        width: 340,
+                        height: 340,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
                       <BarIndicator color="#021B79" count={5} size={60} />
-                    ) : (
-                      <RN.Image
-                        source={{uri: QrPayment}}
-                        style={Styles.qrcode_image}
-                      />
-                    )}
-                  </RN.View>
+                    </RN.View>
+                  ) : (
+                    <RN.Image
+                      source={{uri: QrPayment}}
+                      style={Styles.qrcode_image}
+                    />
+                  )}
                 </RN.View>
               </>
             )}
           </RN.View>
+          <RN.View style={Styles.timer_content}>
+            <RN.View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Icon name="clock-outline" size={40} color={'#0F238C'} />
+              <RN.Text style={Styles.timer_title_text}>Payment Time</RN.Text>
+            </RN.View>
+            <RN.Text style={Styles.timer_text}>
+              {moment.unix(timer).format('mm:ss')}
+            </RN.Text>
+          </RN.View>
           <RN.View style={Styles.footerContainer}>
-            {!LoadDispense ? (
-              <>
-                {paymentType == 'ThaiQR' && (
-                  <RN.View style={Styles.mobile_banking_container}>
-                    <RN.Image
-                      source={require('../../assets/images/mobile_banking2.png')}
-                      style={Styles.mobile_banking_image}
-                    />
-                  </RN.View>
-                )}
-                {paymentType == 'TrueWallet' && (
-                  <RN.View style={Styles.mobile_banking_container}>
-                    <RN.Image
-                      source={require('../../assets/images/true_wallet_logo.png')}
-                      style={[Styles.mobile_banking_image, {marginTop: 20}]}
-                    />
-                  </RN.View>
-                )}
-              </>
-            ) : (
-              <>
-                {!dispenseError ? (
-                  <RN.View style={[Styles.w100, {alignItems: 'center'}]}>
-                    <RN.Text style={Styles.vending_process_text}>
-                      เครื่องกำลังจ่ายของให้ท่าน ...
-                    </RN.Text>
-                  </RN.View>
-                ) : (
-                  <RN.View style={[Styles.w100, {alignItems: 'center'}]}>
-                    <RN.Text style={Styles.vending_error_text}>
-                      {msgError}
-                    </RN.Text>
-                  </RN.View>
-                )}
-              </>
+            {paymentType == 'ThaiQR' && (
+              <RN.View style={Styles.mobile_banking_container}>
+                <RN.Image
+                  source={require('../../assets/images/mobile_banking3.png')}
+                  style={Styles.mobile_banking_image}
+                />
+              </RN.View>
+            )}
+            {paymentType == 'TrueWallet' && (
+              <RN.View style={Styles.mobile_banking_container}>
+                <RN.Image
+                  source={require('../../assets/images/true_wallet_logo.png')}
+                  style={[Styles.mobile_banking_image, {marginTop: 20}]}
+                />
+              </RN.View>
             )}
           </RN.View>
           {!disableCancel ? (
@@ -413,7 +437,7 @@ const QRPaymentScreen = ({
                 start={{x: 1, y: 0}}
                 style={Styles.btn_cancel_content}
                 colors={['#93291E', '#ED213A', '#93291E']}>
-                <RN.Text style={Styles.btn_cancel_text}>CANCEL</RN.Text>
+                <RN.Text style={Styles.btn_cancel_text}>ยกเลิก</RN.Text>
               </LinearGradient>
             </RN.TouchableOpacity>
           ) : (
@@ -422,40 +446,42 @@ const QRPaymentScreen = ({
                 start={{x: 1, y: 0}}
                 style={Styles.btn_cancel_content}
                 colors={['#ddd', '#ddd', '#ddd']}>
-                <RN.Text style={Styles.btn_cancel_text}>CANCEL</RN.Text>
+                <RN.Text style={Styles.btn_cancel_text}>ยกเลิก</RN.Text>
               </LinearGradient>
             </RN.View>
           )}
-          <RN.View style={Styles.vending_status_container}>
-            <RN.Text style={Styles.vending_status_text}>
-              สถานะตู้ : {vendingStatus}
-            </RN.Text>
-          </RN.View>
+          {!refundMoneyStatus ? (
+            <RN.View style={Styles.vending_status_container}>
+              <RN.Text style={Styles.vending_status_text}>
+                สถานะตู้ : {vendingStatus}
+              </RN.Text>
+            </RN.View>
+          ) : (
+            <RN.View style={Styles.changeMoney_container}>
+              <RN.View>
+                <RN.Text style={Styles.changeMoney_text}>
+                  กรุณารับเงินคือจำนวน{' '}
+                  <RN.Text style={Styles.change_color}>{moneyRefund}</RN.Text>{' '}
+                  บาท
+                </RN.Text>
+                <RN.Text style={Styles.changeMoney_process_text}>
+                  เครื่องกำลังคืนเงิน ...
+                </RN.Text>
+              </RN.View>
+              <RN.View style={Styles.changeMoney_image_container}>
+                <LinearGradient
+                  start={{x: 1, y: 0}}
+                  style={Styles.changeMoney_image_content}
+                  colors={['#141E30', '#243B55', '#141E30']}>
+                  <RN.Image
+                    source={require('../../assets/images/change_money.gif')}
+                    style={Styles.changeMoney_image}
+                  />
+                </LinearGradient>
+              </RN.View>
+            </RN.View>
+          )}
         </>
-        {refundMoneyStatus && (
-          <RN.View style={Styles.changeMoney_container}>
-            <RN.View>
-              <RN.Text style={Styles.changeMoney_text}>
-                กรุณารับเงินคือจำนวน{' '}
-                <RN.Text style={Styles.change_color}>{moneyRefund}</RN.Text> บาท
-              </RN.Text>
-              <RN.Text style={Styles.changeMoney_process_text}>
-                เครื่องกำลังคืนเงิน ...
-              </RN.Text>
-            </RN.View>
-            <RN.View style={Styles.changeMoney_image_container}>
-              <LinearGradient
-                start={{x: 1, y: 0}}
-                style={Styles.changeMoney_image_content}
-                colors={['#141E30', '#243B55', '#141E30']}>
-                <RN.Image
-                  source={require('../../assets/images/change_money.gif')}
-                  style={Styles.changeMoney_image}
-                />
-              </LinearGradient>
-            </RN.View>
-          </RN.View>
-        )}
       </RN.View>
     </RN.View>
   );

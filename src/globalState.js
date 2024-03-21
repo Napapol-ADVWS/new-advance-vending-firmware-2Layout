@@ -88,7 +88,7 @@ export const inventoryAll = atom({
 
 export const ads = atom({
   key: 'ads',
-  default: {},
+  default: false,
 });
 
 export const payment_method = atom({
@@ -219,5 +219,20 @@ export const motorDisplay = atom({
 
 export const blockRefundMoney = atom({
   key: 'blockRefundMoney',
+  default: false,
+});
+
+export const adsDownload = atom({
+  key: 'adsDownload',
+  default: 0,
+});
+
+export const adsDownloadPer = atom({
+  key: 'adsDownload',
+  default: 0,
+});
+
+export const startDownlaod = atom({
+  key: 'startDownlaod',
   default: false,
 });

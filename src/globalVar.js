@@ -26,5 +26,6 @@ const data = {
   testMotor: [],
   blockBill: 1,
   blockRefundMoney: false,
+  startDownlaod: false,
 };
 module.exports = data;

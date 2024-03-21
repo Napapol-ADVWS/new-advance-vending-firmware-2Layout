@@ -150,17 +150,15 @@ export const Styles = StyleSheet.create({
     marginBottom: 30,
   },
   timer_content: {
-    width: '22%',
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: '#fff',
     padding: 5,
     borderRadius: 20,
     shadowColor: 'black',
     shadowOpacity: 0.2,
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 10,
-    elevation: 3,
   },
   timer_text: {
     fontSize: 25,

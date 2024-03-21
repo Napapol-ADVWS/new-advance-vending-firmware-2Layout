@@ -19,8 +19,8 @@ const PaymentButton = ({selectQrType, onSelectCash, product}) => {
         _id: 0,
         active: cashStatus ? false : true,
         logo_image: cashStatus
-          ? require('../../../assets/images/money_th_icon.png')
-          : require('../../../assets/images/money_th_icon_disable.png'),
+          ? require('../../../assets/images/new_money_payment.png')
+          : require('../../../assets/images/new_money_payment_disable.png'),
         name: 'เงินสด',
         type: 'Cash',
         color: '#fff',
@@ -34,10 +34,10 @@ const PaymentButton = ({selectQrType, onSelectCash, product}) => {
           let obj = {
             _id: item._id,
             active: false,
-            logo_image: require('../../../assets/images/thaiqr_logo.png'),
-            name: item.name,
+            logo_image: require('../../../assets/images/new_qr_payment.png'),
+            name: 'THAI QR PAYMENT',
             type: item.type,
-            color: '#1b3463',
+            color: '#fff',
           };
           methods.push(obj);
         }
@@ -45,8 +45,8 @@ const PaymentButton = ({selectQrType, onSelectCash, product}) => {
         let obj = {
           _id: item._id,
           active: false,
-          logo_image: require('../../../assets/images/visa_logo.png'),
-          name: 'Credit Card',
+          logo_image: require('../../../assets/images/new_card_payment.png'),
+          name: 'Credit / Debit Card',
           type: item.type,
           color: '#fff',
         };
@@ -72,7 +72,7 @@ const PaymentButton = ({selectQrType, onSelectCash, product}) => {
           type: item.type,
           color: '#fff',
         };
-        methods.push(obj)
+        methods.push(obj);
       }
     });
     setQrMethod(methods);
@@ -87,8 +87,25 @@ const PaymentButton = ({selectQrType, onSelectCash, product}) => {
         onPress={() =>
           item.type == 'Cash' ? onSelectCash() : onSelectType(item)
         }>
-        <RN.Image style={Styles.image_qr_type} source={item.logo_image} />
-        <RN.Text style={Styles.payment_button_text}>{item.name}</RN.Text>
+        <RN.View
+          style={{
+            width: '100%',
+            height: '70%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <RN.Image style={Styles.image_qr_type} source={item.logo_image} />
+        </RN.View>
+        <RN.View
+          style={{
+            width: '100%',
+            height: '30%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: '-7%',
+          }}>
+          <RN.Text style={Styles.payment_button_text}>{item.name}</RN.Text>
+        </RN.View>
       </RN.TouchableOpacity>
     </>
   );

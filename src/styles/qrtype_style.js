@@ -43,8 +43,8 @@ export const Styles = StyleSheet.create({
     bottom: 15,
   },
   image_qr_type: {
-    width: 160,
-    height: 160,
+    width: 125,
+    height: 125,
     resizeMode: 'contain',
   },
   btn_qr_card: {
@@ -61,12 +61,12 @@ export const Styles = StyleSheet.create({
     elevation: 3,
   },
   payment_button_text: {
-    color: '#000',
-    backgroundColor: '#fff',
-    width: '50%',
+    color: '#0F238C',
+    width: '70%',
     textAlign: 'center',
-    elevation: 2,
-    fontWeight: 'bold',
+    fontSize: 23,
+    // fontWeight: 'bold',
+    fontFamily: 'Kanit-SemiBold',
     borderRadius: 10,
   },
   btn_qr_card_container: {

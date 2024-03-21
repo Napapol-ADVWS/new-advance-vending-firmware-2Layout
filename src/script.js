@@ -99,46 +99,114 @@ const getLastCoinStack = () => {
   return coinStack;
 };
 
-const checkURLVideo = (videoUrl, cb) => {
+const checkURLVideo = (
+  videoUrl,
+  adsDownload,
+  adsDownloadPer,
+  ads,
+  videoReady,
+  startDownlaod,
+  cb,
+) => {
   STORE.getItem('adsURL', async res => {
+    console.log('adsURL::::::::', res.data, '===', videoUrl, '');
     if (res.result) {
       if (res.data === videoUrl) {
         STORE.getItem('adsVideo', async adsData => {
-          cb(adsData.data);
+          if (adsData.result) {
+            //cb(adsData.data);
+            ads(adsData.data);
+            videoReady(true);
+            cb('Setting completed!');
+          } else {
+            downloadFileADS(
+              videoUrl,
+              adsDownload,
+              adsDownloadPer,
+              ads,
+              videoReady,
+              startDownlaod,
+              cb,
+            );
+          }
         });
       } else {
         STORE.setItem('adsURL', videoUrl, callback => {
           if (callback.result) {
-            downloadFileADS(videoUrl, cb);
+            downloadFileADS(
+              videoUrl,
+              adsDownload,
+              adsDownloadPer,
+              ads,
+              videoReady,
+              startDownlaod,
+              cb,
+            );
           }
         });
       }
     } else {
       STORE.setItem('adsURL', videoUrl, callback => {
         if (callback.result) {
-          downloadFileADS(videoUrl, cb);
+          downloadFileADS(
+            videoUrl,
+            adsDownload,
+            adsDownloadPer,
+            ads,
+            videoReady,
+            startDownlaod,
+            cb,
+          );
         }
       });
     }
   });
 };
 
-const downloadFileADS = async (videoUrl, cb) => {
-  try {
-    const response = await RNFetchBlob.config({
-      fileCache: true,
-    }).fetch('GET', videoUrl);
-
-    // ดึงข้อมูลไฟล์จาก response
-    const fileData = response.data;
-    STORE.setItem('adsVideo', fileData, callback => {
-      if (callback.result) {
-        cb(fileData);
-      }
-    });
-    // ทำอะไรกับไฟล์ที่ดาวน์โหลด
-  } catch (error) {
-    console.error('Error downloading file:', error);
+const downloadFileADS = async (
+  videoUrl,
+  adsDownload,
+  adsDownloadPer,
+  ads,
+  videoReady,
+  startDownlaod,
+  cb,
+) => {
+  if (!G.startDownlaod) {
+    G.startDownlaod = true;
+    startDownlaod(true);
+    try {
+      const response = await RNFetchBlob.config({
+        fileCache: true,
+      })
+        .fetch('GET', videoUrl)
+        .progress((received, total) => {
+          adsDownload(received / total);
+          let processDN = (received / total) * 100;
+          console.log('DOWNLOAD: ', Number(processDN.toFixed(2) * 100), ' %');
+          adsDownloadPer(Number(processDN.toFixed(2)));
+          // อัปเดต UI หรือทำตามการตรวจสอบความคืบหน้า
+        })
+        .then(res => {
+          console.log('Download completed!');
+          G.startDownlaod = false;
+          // ดำเนินการอื่น ๆ หลังจากการดาวน์โหลดเสร็จสิ้น
+          const fileData = res.data;
+          STORE.setItem('adsVideo', fileData, callback => {
+            if (callback.result) {
+              ads(fileData);
+              videoReady(true);
+              startDownlaod(false);
+              cb('Download completed!');
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Error during download:', error);
+        });
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
   }
 };
 
